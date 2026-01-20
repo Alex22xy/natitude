@@ -3,7 +3,7 @@ export default function TheWildPage() {
     { title: "Opening Hours", content: "WED - SAT: 10PM - 4AM\nSUN: 8PM - 2AM", highlight: "LIVE NOW" },
     { title: "The Sanctuary", content: "Zero-tolerance policy. Trained wellbeing staff on-site.", highlight: "SAFETY FIRST" },
     { title: "Promotions", content: "Complimentary jungle cocktail for members before 11 PM.", highlight: "MEMBER PERK" },
-    { title: "Private Hire", content: "Full venue and VIP booth packages available.", highlight: "ENQUIRE TESTING" },
+    { title: "Private Hire", content: "Full venue and VIP booth packages available.", highlight: "ENQUIRE" },
   ];
 
   return (
