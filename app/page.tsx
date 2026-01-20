@@ -34,11 +34,11 @@ export default function Home() {
       </div>
 
       {/* 3. Subtle Bottom Text */}
-      <div className="absolute bottom-32 z-10 animate-pulse">
-        <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-white/30">
-          Welcome to the Jungle
-        </p>
-      </div>
+        <div className="absolute bottom-32 z-10 animate-pulse text-center">
+          <p className="text-sm font-black uppercase tracking-[0.6em] text-white/40">
+            Welcome to the Jungle
+          </p>
+        </div>
     </main>
   );
 }
