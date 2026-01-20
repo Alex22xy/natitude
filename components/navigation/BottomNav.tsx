@@ -8,7 +8,7 @@ export default function BottomNav() {
   const navItems = [
     {
       id: "choose1",
-      path: "/",
+      path: "/", // Ensure this matches your home route
       label: "Home",
       svg: <path d="m4 12 8-8 8 8M6 10.5V19a1 1 0 0 0 1 1h3v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h3a1 1 0 0 0 1-1v-8.5" />,
     },
@@ -18,15 +18,12 @@ export default function BottomNav() {
       label: "Search",
       svg: <path d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />,
     },
-    // The "JOIN" Button (Center Action)
     {
       id: "join",
       path: "/join",
       label: "Join",
       isAction: true,
-      svg: (
-        <path d="M12 5v14M5 12h14" strokeWidth="3" /> // Thicker Plus Icon
-      ),
+      svg: <path d="M12 5v14M5 12h14" strokeWidth="3" />,
     },
     {
       id: "choose3",
@@ -43,23 +40,29 @@ export default function BottomNav() {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl px-2">
-      <div className="flex h-16 items-center justify-around max-w-lg mx-auto">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-t border-white/5 px-2">
+      <div className="flex h-20 items-center justify-around max-w-lg mx-auto pb-4">
         {navItems.map((item) => {
-          const isActive = pathname === item.path;
+          // Logic check: does the current URL start with the item path?
+          // Using startsWith handles nested routes like /profile/alex
+          const isActive = item.path === "/" 
+            ? pathname === "/" 
+            : pathname.startsWith(item.path);
           
           if (item.isAction) {
             return (
-              <Link key={item.id} href={item.path} className="relative -top-2">
+              <Link key={item.id} href={item.path} className="relative -top-4">
                 <div className="flex flex-col items-center">
-                  <div className={`flex h-12 w-12 items-center justify-center rounded-xl border-2 transition-all shadow-[0_0_15px_rgba(255,0,255,0.2)] ${
-                    isActive ? "bg-[#FF00FF] border-[#FF00FF]" : "bg-transparent border-white/20"
+                  <div className={`flex h-14 w-14 items-center justify-center rounded-2xl border-2 transition-all duration-500 ${
+                    isActive 
+                      ? "bg-[#FF00FF] border-[#FF00FF] shadow-[0_0_25px_rgba(255,0,255,0.6)] scale-110" 
+                      : "bg-zinc-900 border-white/20 shadow-[0_0_15px_rgba(0,0,0,0.5)]"
                   }`}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className={`w-7 h-7 ${isActive ? "stroke-black" : "stroke-white"}`}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className={`w-8 h-8 ${isActive ? "stroke-black" : "stroke-white"}`}>
                       {item.svg}
                     </svg>
                   </div>
-                  <span className={`text-[10px] mt-1 font-bold uppercase tracking-tighter ${isActive ? "text-[#FF00FF]" : "text-white/40"}`}>
+                  <span className={`text-[9px] mt-1.5 font-black uppercase tracking-widest ${isActive ? "text-[#FF00FF]" : "text-white/40"}`}>
                     {item.label}
                   </span>
                 </div>
@@ -74,19 +77,22 @@ export default function BottomNav() {
                 fill="none"
                 strokeWidth="2"
                 stroke="currentColor"
-                className={`w-6 h-6 transition-all ${
-                  isActive ? "stroke-[#FF00FF] scale-110 drop-shadow-[0_0_5px_#FF00FF]" : "stroke-white/40 group-hover:stroke-white/70"
+                className={`w-6 h-6 transition-all duration-300 ${
+                  isActive 
+                    ? "stroke-[#FF00FF] scale-110 drop-shadow-[0_0_8px_rgba(255,0,255,0.8)]" 
+                    : "stroke-white/30 group-hover:stroke-white/70"
                 }`}
               >
                 {item.svg}
               </svg>
-              <div className={`mt-1 h-1 w-1 rounded-full ${isActive ? "bg-[#FF00FF]" : "bg-transparent"}`} />
+              {/* Active Indicator Dot */}
+              <div className={`mt-2 h-1 w-1 rounded-full transition-all duration-500 ${
+                isActive ? "bg-[#FF00FF] scale-150 shadow-[0_0_8px_#FF00FF]" : "bg-transparent scale-0"
+              }`} />
             </Link>
           );
         })}
       </div>
-      {/* Safe Area for iPhone 16 Pro Max */}
-      <div className="h-6" />
     </nav>
   );
 }
