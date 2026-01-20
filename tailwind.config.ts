@@ -1,6 +1,5 @@
-import type { Config } from "tailwindcss";
-
-const config: Config = {
+/** @type {import('tailwindcss').Config} */
+const config = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -8,7 +7,6 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      // THE NEW CODE GOES HERE:
       keyframes: {
         scan: {
           "0%": { top: "0%" },
@@ -18,7 +16,6 @@ const config: Config = {
       animation: {
         scan: "scan 2s linear infinite",
       },
-      // ... keep your other existing theme settings (colors, etc) below
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
@@ -27,4 +24,5 @@ const config: Config = {
   },
   plugins: [],
 };
+
 export default config;
