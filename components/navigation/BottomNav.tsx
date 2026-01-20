@@ -7,44 +7,38 @@ export default function BottomNav() {
   console.log("Current Pathname is:", pathname);
 
   const navItems = [
-    {
-      id: "choose1",
-      path: "/", // Ensure this matches your home route
-      label: "Home",
-      svg: <path d="m4 12 8-8 8 8M6 10.5V19a1 1 0 0 0 1 1h3v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h3a1 1 0 0 0 1-1v-8.5" />,
-    },
-    {
-      id: "choose2",
-      path: "/map",
-      label: "Search",
-      svg: <path d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />,
-    },
-    {
-      id: "join",
-      path: "/join",
-      label: "Join",
-      isAction: true,
-      svg: <path d="M12 5v14M5 12h14" strokeWidth="3" />,
-    },
-    {
-      id: "choose3",
-      path: "/event",
-      label: "Saved",
-      svg: <path d="m17 21-5-4-5 4V3.889a.92.92 0 0 1 .244-.629.808.808 0 0 1 .59-.26h8.333a.81.81 0 0 1 .589.26.92.92 0 0 1 .244.63V21Z" />,
-    },
-    {
-      id: "choose4",
-      path: "/profile",
-      label: "Profile",
-      svg: <path d="M10 19H5a1 1 0 0 1-1-1v-1a3 3 0 0 1 3-3h2m10 1a3 3 0 0 1-3 3m3-3a3 3 0 0 0-3-3m3 3h1m-4 3a3 3 0 0 1-3-3m3 3v1m-3-4a3 3 0 0 1 3-3m-3 3h-1m4-3v-1m-2.121 1.879-.707-.707m5.656 5.656-.707-.707m-4.242 0-.707.707m5.656-5.656-.707.707M12 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />,
-    },
-    {
-      id: "choose2",
-      path: "/map",
-      label: "The Wild", // Changed from "Search"
-      svg: <path d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />,
-    },
-  ];
+  {
+    id: "home",
+    path: "/",
+    label: "Home",
+    svg: <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />,
+  },
+  {
+    id: "the-wild",
+    path: "/map",
+    label: "The Wild",
+    svg: <path d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />,
+  },
+  {
+    id: "join",
+    path: "/join",
+    label: "Join",
+    isAction: true,
+    svg: <path d="M12 5v14M5 12h14" />,
+  },
+  {
+    id: "saved",
+    path: "/event",
+    label: "Saved",
+    svg: <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />,
+  },
+  {
+    id: "profile",
+    path: "/profile",
+    label: "Profile",
+    svg: <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" />,
+  },
+];
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-t border-white/5 px-2">
