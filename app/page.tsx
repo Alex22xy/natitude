@@ -10,19 +10,18 @@ export default function Home() {
           loop
           muted
           playsInline
-          // Adjusted brightness from 0.4 to 0.7 and opacity from 0.4 to 0.5
-          className="h-full w-full object-cover opacity-50 grayscale-[0.1] brightness-[0.7]"
+          // Halfway point: brightness 0.55 and opacity 0.45
+          className="h-full w-full object-cover opacity-[0.45] grayscale-[0.15] brightness-[0.55]"
         >
           <source src="/assets/jungle.mp4" type="video/mp4" />
         </video>
-        {/* Gradient overlay - lightened the top shadow to let more video show through */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black" />
+        {/* Gradient overlay - adjusted for a balanced "middle" look */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black" />
       </div>
 
       {/* 2. Logo Container */}
       <div className="relative z-10 w-full max-w-[600px] transition-transform duration-1000 ease-out hover:scale-105">
-        {/* Slightly increased opacity of the glow to keep it popping over a brighter video */}
-        <div className="absolute -inset-10 rounded-full bg-[#FF00FF] opacity-15 blur-[120px]" />
+        <div className="absolute -inset-10 rounded-full bg-[#FF00FF] opacity-10 blur-[120px]" />
         
         <Image 
           src="/assets/logo.svg" 
