@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 
 export default function BottomNav() {
   const pathname = usePathname();
+  console.log("Current Pathname is:", pathname);
 
   const navItems = [
     {
