@@ -1,39 +1,31 @@
+import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
+
+// This initializes the mail service using your secret key
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
   try {
     const { email, message } = await req.json();
 
-    // 1. Setup the transporter (Your "Mail Server")
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'natituebars@gmail.com',
-        // You'll need a "Gmail App Password" here, not your regular password
-        pass: process.env.EMAIL_APP_PASSWORD, 
-      },
-    });
-
-    // 2. Setup the email content
-    const mailOptions = {
-      from: email,
+    await resend.emails.send({
+      from: 'Natitude Web <onboarding@resend.dev>', 
       to: 'natituebars@gmail.com',
-      subject: `New Tribe Inquiry from ${email}`,
-      text: message,
+      reply_to: email, // This is what lets you click "Reply" in Gmail
+      subject: `🌿 New Inquiry: ${email}`,
       html: `
-        <div style="background: #000; color: #fff; padding: 20px; border: 1px solid #FF00FF;">
-          <h2 style="color: #FF00FF;">New Message from Natitude</h2>
-          <p><strong>Sender:</strong> ${email}</p>
+        <div style="background-color: #000; color: #fff; padding: 30px; font-family: sans-serif; border: 1px solid #FF00FF; border-radius: 15px;">
+          <h2 style="color: #FF00FF; text-transform: uppercase;">New Tribe Message</h2>
+          <p><strong>From:</strong> ${email}</p>
           <p><strong>Message:</strong></p>
-          <p>${message}</p>
+          <p style="background: #111; padding: 15px; border-radius: 10px;">${message}</p>
         </div>
       `,
-    };
+    });
 
-    await transporter.sendMail(mailOptions);
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.error(error);
     return NextResponse.json({ error: 'Failed to send' }, { status: 500 });
   }
 }
