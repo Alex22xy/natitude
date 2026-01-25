@@ -10,7 +10,7 @@ export async function POST(req: Request) {
 
     const data = await resend.emails.send({
       from: 'Natitude <onboarding@resend.dev>',
-      to: 'natituebars@gmail.com',
+      to: 'natitudebars@gmail.com',
       replyTo: email,
       subject: `🌿 New Tribe Inquiry: ${email}`,
       html: `
