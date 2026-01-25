@@ -1,16 +1,17 @@
 import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
 
-// Initialize Resend inside the POST function or at the top level
+// Initialize Resend with your API Key from .env.local or Vercel
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
   try {
     const { email, message } = await req.json();
 
+    // In Testing Mode, 'to' must be your signup email: alex.john.norton9@gmail.com
     const data = await resend.emails.send({
       from: 'Natitude <onboarding@resend.dev>',
-      to: 'natitudebars@gmail.com',
+      to: 'alex.john.norton9@gmail.com', 
       replyTo: email,
       subject: `🌿 New Tribe Inquiry: ${email}`,
       html: `
@@ -22,6 +23,9 @@ export async function POST(req: Request) {
           <div style="background: #111; padding: 15px; border-radius: 10px; border: 1px solid #222;">
             ${message}
           </div>
+          <p style="font-size: 10px; color: #444; margin-top: 20px;">
+            Sent from local development / Natitude Website
+          </p>
         </div>
       `,
     });
