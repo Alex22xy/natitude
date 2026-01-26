@@ -1,12 +1,33 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { createClient } from '@supabase/supabase-js';
+
+// 1. Initialize Supabase
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 export default function JoinPage() {
-  const [signupCount, setSignupCount] = useState(0); // Update this manually as you grow
+  const [signupCount, setSignupCount] = useState(0); 
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [hpValue, setHpValue] = useState(""); // Honeypot bot trap
+  const [hpValue, setHpValue] = useState(""); 
+
+  // 2. Fetch the live count from Supabase on page load
+  useEffect(() => {
+    async function fetchCount() {
+      const { count, error } = await supabase
+        .from('signups')
+        .select('*', { count: 'exact', head: true });
+      
+      if (!error && count !== null) {
+        setSignupCount(count);
+      }
+    }
+    fetchCount();
+  }, []);
 
   // Tier Logic
   const isTier1 = signupCount < 50;
@@ -16,13 +37,13 @@ export default function JoinPage() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     
-    // 1. Bot Check
+    // Bot Check
     if (hpValue !== "") return; 
 
     const formData = new FormData(e.currentTarget);
     const tel = formData.get("telephone") as string;
 
-    // 2. Strict UK Mobile Validation (Starts with 0 or +44, minimum 11 digits)
+    // UK Mobile Validation
     const phoneRegex = /^(?:0|\+44)\d{10,12}$/;
     if (!phoneRegex.test(tel.replace(/\s/g, ""))) {
       alert("Please enter a valid UK mobile number (at least 11 digits).");
@@ -32,14 +53,27 @@ export default function JoinPage() {
     setLoading(true);
 
     const data = {
-    name: formData.get("name"),
-    telephone: formData.get("telephone"), // Ensure this says 'telephone'
-    instagram: formData.get("instagram"),
-    email: formData.get("email"),
-    tier: isTier1 ? "Tier 1: Free Entry + Shot" : isTier2 ? "Tier 2: Free Shot" : "Standard"
+      name: formData.get("name"),
+      telephone: tel,
+      instagram: formData.get("instagram"),
+      email: formData.get("email"),
+      tier: isTier1 ? "Tier 1: Free Entry + Shot" : isTier2 ? "Tier 2: Free Shot" : "Standard"
     };
 
     try {
+      // 3. AUTOMATIC STEP: Insert into Supabase Table
+      const { error: dbError } = await supabase
+        .from('signups')
+        .insert([{ 
+          name: data.name, 
+          email: data.email, 
+          instagram: data.instagram, 
+          telephone: data.telephone 
+        }]);
+
+      if (dbError) throw dbError;
+
+      // 4. Send Email via API
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -52,7 +86,8 @@ export default function JoinPage() {
         setSubmitted(true);
       }
     } catch (error) {
-      alert("Transmission failed. Please check your connection.");
+      console.error("Submission error:", error);
+      alert("System error. Your application was not transmitted.");
     } finally {
       setLoading(false);
     }
@@ -85,8 +120,14 @@ export default function JoinPage() {
             <h2 className="text-white text-lg font-light italic leading-tight">
               {isTier1 ? "Free Entry + Free Shot Unlocked" : "Free Shot Unlocked"}
             </h2>
-            {/* Ambient Glow */}
-            <div className="absolute -right-4 -top-4 w-20 h-20 bg-[#FF00FF]/10 blur-3xl rounded-full" />
+            {/* Visual Progress Bar */}
+            <div className="mt-4 h-[2px] w-full bg-white/5 rounded-full overflow-hidden">
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: `${(signupCount / 100) * 100}%` }}
+                className="h-full bg-[#FF00FF]"
+              />
+            </div>
           </div>
         )}
 
@@ -98,7 +139,6 @@ export default function JoinPage() {
         </header>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* BOT TRAP */}
           <input type="text" style={{ display: 'none' }} value={hpValue} onChange={(e) => setHpValue(e.target.value)} />
 
           <div className="space-y-1">
