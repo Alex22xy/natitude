@@ -32,11 +32,11 @@ export default function JoinPage() {
     setLoading(true);
 
     const data = {
-      name: formData.get("name"),
-      telephone: tel, // Matches API destructuring
-      instagram: formData.get("instagram"),
-      email: formData.get("email"),
-      tier: isTier1 ? "Tier 1: Free Entry + Shot" : isTier2 ? "Tier 2: Free Shot" : "Standard"
+    name: formData.get("name"),
+    telephone: formData.get("telephone"), // Ensure this says 'telephone'
+    instagram: formData.get("instagram"),
+    email: formData.get("email"),
+    tier: isTier1 ? "Tier 1: Free Entry + Shot" : isTier2 ? "Tier 2: Free Shot" : "Standard"
     };
 
     try {
