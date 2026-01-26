@@ -3,60 +3,114 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 export default function JoinPage() {
-  const [signupCount, setSignupCount] = useState(0); // This will come from your database
+  const [signupCount, setSignupCount] = useState(0); // Set this manually or connect to DB
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  
+  // Security Layer 1: Honeypot state
+  const [hpValue, setHpValue] = useState("");
 
-  // 1. Logic to decide which promotion to show
+  // Logic for Tiers
   const isTier1 = signupCount < 50;
   const isTier2 = signupCount >= 50 && signupCount < 100;
   const promoActive = signupCount < 100;
 
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    
+    // Security Layer 2: Bot check
+    if (hpValue !== "") {
+      console.log("Bot detected.");
+      return; 
+    }
+
+    setLoading(true);
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get("name"),
+      phone: formData.get("phone"),
+      instagram: formData.get("instagram"),
+      email: formData.get("email"),
+      tier: isTier1 ? "Tier 1: Free Entry + Shot" : isTier2 ? "Tier 2: Free Shot" : "Standard"
+    };
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        localStorage.setItem("natitude_name", data.name as string);
+        localStorage.setItem("natitude_handle", data.instagram as string);
+        setSubmitted(true);
+      }
+    } catch (error) {
+      alert("System error. Try again later.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (submitted) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center px-6 text-center">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <h2 className="text-[#FF00FF] text-3xl font-black italic uppercase mb-2">Access Requested.</h2>
+          <p className="text-zinc-500 text-[10px] tracking-[0.3em] uppercase">Check your email for confirmation.</p>
+        </motion.div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-black pt-20 px-6 pb-20">
+    <div className="min-h-screen bg-black pt-24 px-6 pb-32">
       <div className="max-w-md mx-auto">
         
-        {/* THE PROMO STATUS BOX */}
+        {/* PROMO DISPLAY */}
         {promoActive && (
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="mb-10 p-6 rounded-2xl border border-[#FF00FF]/30 bg-[#FF00FF]/5 text-center"
-          >
-            <span className="text-[10px] text-[#FF00FF] font-black tracking-[0.4em] uppercase">
-              {isTier1 ? "Tier 1: Founder Status" : "Tier 2: Early Bird"}
-            </span>
-            <h2 className="text-white text-xl font-light mt-2 italic">
-              {isTier1 
-                ? "Unlocked: Free Entry + Free Shot" 
-                : "Unlocked: Free Shot with first drink"}
-            </h2>
-            <div className="mt-4 h-1 w-full bg-zinc-800 rounded-full overflow-hidden">
-               {/* Visual progress bar */}
-              <div 
-                className="h-full bg-[#FF00FF] transition-all duration-1000" 
-                style={{ width: `${(signupCount / 100) * 100}%` }}
-              />
+          <div className="mb-10 p-6 rounded-2xl border border-[#FF00FF]/20 bg-[#FF00FF]/5">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-[9px] text-[#FF00FF] font-black tracking-widest uppercase">
+                {isTier1 ? "Tier 1 Promo Active" : "Tier 2 Promo Active"}
+              </span>
+              <span className="text-zinc-600 text-[9px] font-mono">{100 - signupCount} Spots Left</span>
             </div>
-            <p className="text-[9px] text-zinc-500 mt-2 uppercase tracking-widest">
-              {100 - signupCount} spots remaining before offer expires
-            </p>
-          </motion.div>
+            <h2 className="text-white text-lg font-light italic">
+              {isTier1 ? "Free Entry + Free Shot Unlocked" : "Free Shot Unlocked"}
+            </h2>
+          </div>
         )}
 
-        {/* THE FORM */}
-        <header className="mb-10">
-          <h1 className="text-3xl font-light tracking-tighter uppercase text-white">
-            Apply for <span className="italic font-black text-[#FF00FF]">Membership</span>
+        <header className="mb-12 text-center">
+          <h1 className="text-4xl font-light tracking-tighter text-white uppercase leading-none">
+            Member <span className="italic font-black text-[#FF00FF]">Application</span>
           </h1>
         </header>
 
-        <form className="space-y-6">
-          <input name="name" required className="w-full bg-transparent border-b border-white/10 py-4 outline-none focus:border-[#FF00FF] text-white" placeholder="FULL NAME" />
-          <input name="instagram" required className="w-full bg-transparent border-b border-white/10 py-4 outline-none focus:border-[#FF00FF] text-white" placeholder="INSTAGRAM @" />
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* BOT TRAP: Hidden from humans */}
+          <input 
+            type="text" 
+            style={{ display: 'none' }} 
+            value={hpValue} 
+            onChange={(e) => setHpValue(e.target.value)} 
+            autoComplete="off" 
+          />
+
+          <input name="name" required type="text" placeholder="FULL NAME" className="w-full bg-transparent border-b border-white/10 py-4 outline-none focus:border-[#FF00FF] text-white uppercase text-xs tracking-widest" />
           
-          <button className="w-full py-6 mt-8 bg-white text-black font-black uppercase tracking-[0.3em] hover:bg-[#FF00FF] hover:text-white transition-all">
-            Submit Application
+          <input name="phone" required type="tel" placeholder="TELEPHONE" className="w-full bg-transparent border-b border-white/10 py-4 outline-none focus:border-[#FF00FF] text-white uppercase text-xs tracking-widest" />
+          
+          <input name="instagram" required type="text" placeholder="INSTAGRAM @" className="w-full bg-transparent border-b border-white/10 py-4 outline-none focus:border-[#FF00FF] text-white uppercase text-xs tracking-widest" />
+          
+          <input name="email" required type="email" placeholder="EMAIL ADDRESS" className="w-full bg-transparent border-b border-white/10 py-4 outline-none focus:border-[#FF00FF] text-white uppercase text-xs tracking-widest" />
+
+          <button 
+            disabled={loading}
+            className="w-full py-6 mt-6 bg-white text-black font-black uppercase tracking-[0.3em] hover:bg-[#FF00FF] hover:text-white transition-all active:scale-95 disabled:opacity-20"
+          >
+            {loading ? "Verifying..." : "Apply Now"}
           </button>
         </form>
       </div>
