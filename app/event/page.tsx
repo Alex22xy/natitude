@@ -1,17 +1,92 @@
+"use client";
+import { motion } from "framer-motion";
+
+const EVENTS = [
+  {
+    id: 1,
+    date: "FEB 14",
+    name: "Neon Velour",
+    location: "London — Secret",
+    status: "Invites Only",
+    type: "Warehouse"
+  },
+  {
+    id: 2,
+    date: "MAR 02",
+    name: "The Altar: Session I",
+    location: "Dubai — DIFC",
+    status: "Table Access Only",
+    type: "Club"
+  },
+  {
+    id: 3,
+    date: "MAR 21",
+    name: "Biological Evolution",
+    location: "Miami — Wynwood",
+    status: "Application Open",
+    type: "Underground"
+  }
+];
+
 export default function EventsPage() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-black px-6">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold text-white mb-2 uppercase tracking-widest">
-          Your Saved Vibes
+    <div className="min-h-screen bg-black pt-32 px-6 pb-32">
+      <header className="mb-16">
+        <h2 className="text-[#FF00FF] font-bold tracking-[0.3em] uppercase text-[10px] mb-4">
+          The Radar
+        </h2>
+        <h1 className="text-4xl font-light tracking-tighter uppercase text-white">
+          Upcoming <br />
+          <span className="italic font-black text-[#FF00FF]">Incidents.</span>
         </h1>
-        <p className="text-white/40 text-sm">
-          Events you've bookmarked will appear here.
-        </p>
+      </header>
+
+      <div className="space-y-12">
+        {EVENTS.map((event, index) => (
+          <motion.div 
+            key={event.id}
+            initial={{ opacity: 0, x: -10 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className="group relative flex items-start gap-6 border-l border-white/10 pl-6 pb-4"
+          >
+            {/* Pulsing Date Indicator */}
+            <div className="absolute -left-[5px] top-0 h-2 w-2 rounded-full bg-white group-hover:bg-[#FF00FF] transition-colors shadow-[0_0_10px_rgba(255,0,255,0.5)]" />
+            
+            <div className="flex-1">
+              <div className="flex justify-between items-start mb-2">
+                <span className="text-xs font-mono text-zinc-500 tracking-tighter">
+                  {event.date} // {event.type}
+                </span>
+                <span className="text-[8px] border border-white/20 px-2 py-1 rounded text-zinc-400 uppercase tracking-widest">
+                  {event.status}
+                </span>
+              </div>
+              
+              <h3 className="text-2xl font-bold uppercase italic tracking-tighter text-white group-hover:text-[#FF00FF] transition-colors">
+                {event.name}
+              </h3>
+              <p className="text-sm text-zinc-500 font-light mt-1">
+                {event.location}
+              </p>
+            </div>
+          </motion.div>
+        ))}
       </div>
-      
-      {/* This ensures the BottomNav doesn't cover your content */}
-      <div className="h-20" /> 
+
+      {/* Booking CTA */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        className="mt-20 p-8 rounded-[2rem] bg-zinc-900/50 border border-white/5 text-center"
+      >
+        <p className="text-zinc-500 text-[10px] uppercase tracking-[0.3em] mb-4">
+          Want priority for the next incident?
+        </p>
+        <button className="text-white border-b border-[#FF00FF] pb-1 text-xs uppercase tracking-widest font-black italic hover:text-[#FF00FF] transition-all">
+          Join the waitlist
+        </button>
+      </motion.div>
     </div>
   );
 }
