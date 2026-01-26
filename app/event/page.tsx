@@ -1,7 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import JoinPage from "../join/page"; // Reusing your high-end form logic
+import JoinPage from "../join/page"; 
 
 const EVENTS = [
   {
@@ -32,6 +32,15 @@ const EVENTS = [
 
 export default function EventsPage() {
   const [showDrawer, setShowDrawer] = useState(false);
+  const [isAlreadyMember, setIsAlreadyMember] = useState(false);
+
+  // Check if the user has already joined on this device
+  useEffect(() => {
+    const savedName = localStorage.getItem("natitude_name");
+    if (savedName) {
+      setIsAlreadyMember(true);
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-black pt-32 px-6 pb-32">
@@ -52,6 +61,7 @@ export default function EventsPage() {
             initial={{ opacity: 0, x: -10 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.1 }}
+            viewport={{ once: true }}
             className="group relative flex items-start gap-6 border-l border-white/10 pl-6 pb-4"
           >
             <div className="absolute -left-[5px] top-0 h-2 w-2 rounded-full bg-white group-hover:bg-[#FF00FF] transition-colors shadow-[0_0_10px_rgba(255,0,255,0.5)]" />
@@ -84,13 +94,18 @@ export default function EventsPage() {
         className="mt-20 p-8 rounded-[2rem] bg-zinc-900/50 border border-white/5 text-center"
       >
         <p className="text-zinc-500 text-[10px] uppercase tracking-[0.3em] mb-4">
-          Want priority for the next incident?
+          {isAlreadyMember ? "Identity Confirmed" : "Want priority for the next incident?"}
         </p>
+        
         <button 
-          onClick={() => setShowDrawer(true)}
-          className="text-white border-b border-[#FF00FF] pb-1 text-xs uppercase tracking-widest font-black italic hover:text-[#FF00FF] transition-all active:scale-95"
+          onClick={() => !isAlreadyMember && setShowDrawer(true)}
+          className={`pb-1 text-xs uppercase tracking-[0.4em] font-black italic transition-all duration-500 border-b ${
+            isAlreadyMember 
+              ? "text-zinc-600 border-zinc-800 cursor-default" 
+              : "text-white border-[#FF00FF] hover:text-[#FF00FF] active:scale-95"
+          }`}
         >
-          Join the waitlist
+          {isAlreadyMember ? "You are on the list" : "Join the waitlist"}
         </button>
       </motion.div>
 
@@ -98,13 +113,12 @@ export default function EventsPage() {
       <AnimatePresence>
         {showDrawer && (
           <>
-            {/* Backdrop blur to dim the Radar behind the drawer */}
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setShowDrawer(false)}
-              className="fixed inset-0 bg-black/80 backdrop-blur-md z-[60]"
+              className="fixed inset-0 bg-black/90 backdrop-blur-xl z-[60]"
             />
             
             <motion.div 
@@ -112,18 +126,16 @@ export default function EventsPage() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed inset-x-0 bottom-0 h-[90vh] bg-black border-t border-white/10 rounded-t-[3rem] z-[70] overflow-y-auto"
+              className="fixed inset-x-0 bottom-0 h-[92vh] bg-black border-t border-white/10 rounded-t-[3rem] z-[70] overflow-y-auto"
             >
-              {/* Close Bar */}
-              <div className="sticky top-0 w-full flex justify-center py-4 bg-black/50 backdrop-blur-sm z-20">
+              <div className="sticky top-0 w-full flex justify-center py-6 bg-black/80 backdrop-blur-md z-20">
                 <button 
                   onClick={() => setShowDrawer(false)}
-                  className="h-1 w-12 bg-zinc-800 rounded-full hover:bg-[#FF00FF] transition-colors"
+                  className="h-1.5 w-16 bg-zinc-800 rounded-full hover:bg-[#FF00FF] transition-colors"
                 />
               </div>
 
-              {/* Injected Join Logic */}
-              <div className="pb-20">
+              <div className="pb-24">
                 <JoinPage />
               </div>
             </motion.div>
