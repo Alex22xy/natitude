@@ -11,7 +11,7 @@ const EVENTS = [
     location: "London — Secret",
     status: "Invites Only",
     type: "Warehouse",
-    image: "https://images.unsplash.com/photo-1514525253361-bee8718a300a?q=80&w=1000&auto=format&fit=crop" // Replace with your image
+    image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=2070&auto=format&fit=crop" // Replace with your image
   },
   {
     id: 2,
