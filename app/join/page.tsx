@@ -103,7 +103,7 @@ export default function JoinPage() {
 
           <div className="space-y-1">
             <label className="text-[8px] text-zinc-600 tracking-[0.2em] uppercase ml-1">Full Identity</label>
-            <input name="name" required type="text" placeholder="ALEX NORTON" className="w-full bg-transparent border-b border-white/10 py-4 outline-none focus:border-[#FF00FF] text-white uppercase text-xs tracking-widest transition-colors" />
+            <input name="name" required type="text" placeholder="Name" className="w-full bg-transparent border-b border-white/10 py-4 outline-none focus:border-[#FF00FF] text-white uppercase text-xs tracking-widest transition-colors" />
           </div>
 
           <div className="space-y-1">
@@ -118,7 +118,7 @@ export default function JoinPage() {
           
           <div className="space-y-1">
             <label className="text-[8px] text-zinc-600 tracking-[0.2em] uppercase ml-1">Direct Email</label>
-            <input name="email" required type="email" placeholder="IDENTITY@DOMAIN.COM" className="w-full bg-transparent border-b border-white/10 py-4 outline-none focus:border-[#FF00FF] text-white uppercase text-xs tracking-widest transition-colors" />
+            <input name="email" required type="email" placeholder="Email" className="w-full bg-transparent border-b border-white/10 py-4 outline-none focus:border-[#FF00FF] text-white uppercase text-xs tracking-widest transition-colors" />
           </div>
 
           <button 
