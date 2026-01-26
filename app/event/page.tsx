@@ -10,7 +10,8 @@ const EVENTS = [
     name: "Neon Velour",
     location: "London — Secret",
     status: "Invites Only",
-    type: "Warehouse"
+    type: "Warehouse",
+    image: "https://images.unsplash.com/photo-1514525253361-bee8718a300a?q=80&w=1000&auto=format&fit=crop" // Replace with your image
   },
   {
     id: 2,
