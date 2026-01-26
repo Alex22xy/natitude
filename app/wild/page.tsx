@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 const sections = [
   {
     id: "01",
-    tag: "Acoustics test",
+    tag: "Acoustics",
     title: "The Soundscape",
     description: "Immersive frequency control designed for the elite hunter.",
   },
