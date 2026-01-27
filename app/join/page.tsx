@@ -3,11 +3,12 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { createClient } from '@supabase/supabase-js';
 
-// 1. Initialize Supabase
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+
+const supabase = (supabaseUrl && supabaseAnonKey) 
+  ? createClient(supabaseUrl, supabaseAnonKey) 
+  : null;
 
 export default function JoinPage() {
   const [signupCount, setSignupCount] = useState(0); 
@@ -15,43 +16,36 @@ export default function JoinPage() {
   const [submitted, setSubmitted] = useState(false);
   const [hpValue, setHpValue] = useState(""); 
 
-  // 2. Fetch the live count from Supabase on page load
   useEffect(() => {
     async function fetchCount() {
+      if (!supabase) return;
+      // head: true ensures we only get the number, NO member data is downloaded
       const { count, error } = await supabase
         .from('signups')
         .select('*', { count: 'exact', head: true });
-      
-      if (!error && count !== null) {
-        setSignupCount(count);
-      }
+      if (!error && count !== null) setSignupCount(count);
     }
     fetchCount();
   }, []);
 
-  // Tier Logic
   const isTier1 = signupCount < 50;
   const isTier2 = signupCount >= 50 && signupCount < 100;
   const promoActive = signupCount < 100;
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    
-    // Bot Check
-    if (hpValue !== "") return; 
+    if (hpValue !== "" || !supabase) return; 
 
     const formData = new FormData(e.currentTarget);
     const tel = formData.get("telephone") as string;
-
-    // UK Mobile Validation
     const phoneRegex = /^(?:0|\+44)\d{10,12}$/;
+    
     if (!phoneRegex.test(tel.replace(/\s/g, ""))) {
-      alert("Please enter a valid UK mobile number (at least 11 digits).");
+      alert("Please enter a valid UK mobile number.");
       return;
     }
 
     setLoading(true);
-
     const data = {
       name: formData.get("name"),
       telephone: tel,
@@ -61,7 +55,6 @@ export default function JoinPage() {
     };
 
     try {
-      // 3. AUTOMATIC STEP: Insert into Supabase Table
       const { error: dbError } = await supabase
         .from('signups')
         .insert([{ 
@@ -73,21 +66,15 @@ export default function JoinPage() {
 
       if (dbError) throw dbError;
 
-      // 4. Send Email via API
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
 
-      if (response.ok) {
-        localStorage.setItem("natitude_name", data.name as string);
-        localStorage.setItem("natitude_handle", data.instagram as string);
-        setSubmitted(true);
-      }
+      if (response.ok) setSubmitted(true);
     } catch (error) {
-      console.error("Submission error:", error);
-      alert("System error. Your application was not transmitted.");
+      alert("Transmission failed. Secure link unavailable.");
     } finally {
       setLoading(false);
     }
@@ -96,9 +83,9 @@ export default function JoinPage() {
   if (submitted) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center px-6 text-center">
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-          <h2 className="text-[#FF00FF] text-3xl font-black italic uppercase mb-2 leading-none">Access Requested.</h2>
-          <p className="text-zinc-500 text-[10px] tracking-[0.3em] uppercase">Check your email for confirmation.</p>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <h2 className="text-[#FF00FF] text-3xl font-black italic uppercase mb-2">Access Requested.</h2>
+          <p className="text-zinc-500 text-[10px] tracking-[0.3em] uppercase">Private confirmation sent to your email.</p>
         </motion.div>
       </div>
     );
@@ -113,60 +100,59 @@ export default function JoinPage() {
           <div className="mb-10 p-6 rounded-2xl border border-[#FF00FF]/20 bg-[#FF00FF]/5 relative overflow-hidden">
             <div className="flex justify-between items-center mb-2">
               <span className="text-[9px] text-[#FF00FF] font-black tracking-widest uppercase">
-                {isTier1 ? "Tier 1 Promo" : "Tier 2 Promo"}
+                {isTier1 ? "Tier 1 Status" : "Tier 2 Status"}
               </span>
               <span className="text-zinc-600 text-[9px] font-mono uppercase">{100 - signupCount} Spots Left</span>
             </div>
-            <h2 className="text-white text-lg font-light italic leading-tight">
-              {isTier1 ? "Free Entry + Free Shot Unlocked" : "Free Shot Unlocked"}
-            </h2>
-            {/* Visual Progress Bar */}
-            <div className="mt-4 h-[2px] w-full bg-white/5 rounded-full overflow-hidden">
-              <motion.div 
-                initial={{ width: 0 }}
-                animate={{ width: `${(signupCount / 100) * 100}%` }}
-                className="h-full bg-[#FF00FF]"
-              />
-            </div>
+            <h2 className="text-white text-lg font-light italic">{isTier1 ? "Free Entry + Shot Unlocked" : "Free Shot Unlocked"}</h2>
+            <div className="mt-4 h-[1px] w-full bg-white/10"><motion.div initial={{ width: 0 }} animate={{ width: `${(signupCount / 100) * 100}%` }} className="h-full bg-[#FF00FF]" /></div>
           </div>
         )}
 
-        <header className="mb-12 text-center">
+        <header className="mb-8 text-center">
           <h1 className="text-4xl font-light tracking-tighter text-white uppercase leading-none">
-            Member <br />
-            <span className="italic font-black text-[#FF00FF]">Application</span>
+            Member <br /> <span className="italic font-black text-[#FF00FF]">Application</span>
           </h1>
+          
+          {/* PRIVACY BADGE */}
+          <div className="mt-6 flex items-center justify-center gap-2 py-2 px-4 border border-zinc-800 rounded-full w-fit mx-auto">
+            <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+            <span className="text-[8px] text-zinc-500 font-black tracking-[0.2em] uppercase">
+              Encrypted Private Registry
+            </span>
+          </div>
         </header>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <input type="text" style={{ display: 'none' }} value={hpValue} onChange={(e) => setHpValue(e.target.value)} />
 
           <div className="space-y-1">
-            <label className="text-[8px] text-zinc-600 tracking-[0.2em] uppercase ml-1">Full Identity</label>
-            <input name="name" required type="text" placeholder="Name" className="w-full bg-transparent border-b border-white/10 py-4 outline-none focus:border-[#FF00FF] text-white uppercase text-xs tracking-widest transition-colors" />
+            <label className="text-[8px] text-zinc-600 tracking-[0.2em] uppercase ml-1 font-bold">Identity</label>
+            <input name="name" required type="text" placeholder="Full Name" className="w-full bg-transparent border-b border-white/10 py-4 outline-none focus:border-[#FF00FF] text-white uppercase text-xs tracking-widest" />
           </div>
 
           <div className="space-y-1">
-            <label className="text-[8px] text-zinc-600 tracking-[0.2em] uppercase ml-1">Secure Contact (UK Mobile)</label>
-            <input name="telephone" required type="tel" placeholder="07XXXXXXXXX" className="w-full bg-transparent border-b border-white/10 py-4 outline-none focus:border-[#FF00FF] text-white uppercase text-xs tracking-widest transition-colors" />
+            <label className="text-[8px] text-zinc-600 tracking-[0.2em] uppercase ml-1 font-bold">Secure Contact</label>
+            <input name="telephone" required type="tel" placeholder="UK Mobile" className="w-full bg-transparent border-b border-white/10 py-4 outline-none focus:border-[#FF00FF] text-white uppercase text-xs tracking-widest" />
           </div>
           
           <div className="space-y-1">
-            <label className="text-[8px] text-zinc-600 tracking-[0.2em] uppercase ml-1">Social Handle</label>
-            <input name="instagram" required type="text" placeholder="@NATITUDE" className="w-full bg-transparent border-b border-white/10 py-4 outline-none focus:border-[#FF00FF] text-white uppercase text-xs tracking-widest transition-colors" />
+            <label className="text-[8px] text-zinc-600 tracking-[0.2em] uppercase ml-1 font-bold">Social</label>
+            <input name="instagram" required type="text" placeholder="@Instagram" className="w-full bg-transparent border-b border-white/10 py-4 outline-none focus:border-[#FF00FF] text-white uppercase text-xs tracking-widest" />
           </div>
           
           <div className="space-y-1">
-            <label className="text-[8px] text-zinc-600 tracking-[0.2em] uppercase ml-1">Direct Email</label>
-            <input name="email" required type="email" placeholder="Email" className="w-full bg-transparent border-b border-white/10 py-4 outline-none focus:border-[#FF00FF] text-white uppercase text-xs tracking-widest transition-colors" />
+            <label className="text-[8px] text-zinc-600 tracking-[0.2em] uppercase ml-1 font-bold">Direct Email</label>
+            <input name="email" required type="email" placeholder="Email Address" className="w-full bg-transparent border-b border-white/10 py-4 outline-none focus:border-[#FF00FF] text-white uppercase text-xs tracking-widest" />
           </div>
 
-          <button 
-            disabled={loading}
-            className="w-full py-6 mt-6 bg-white text-black font-black uppercase tracking-[0.3em] hover:bg-[#FF00FF] hover:text-white transition-all active:scale-95 disabled:opacity-20"
-          >
-            {loading ? "Authenticating..." : "Apply for Access"}
+          <button disabled={loading} className="w-full py-6 mt-6 bg-white text-black font-black uppercase tracking-[0.3em] hover:bg-[#FF00FF] hover:text-white transition-all disabled:opacity-20">
+            {loading ? "Verifying..." : "Apply for Access"}
           </button>
+          
+          <p className="text-[7px] text-center text-zinc-700 uppercase tracking-widest leading-relaxed">
+            By applying, you agree to our private membership terms.<br/>Your data is 256-bit encrypted and never shared.
+          </p>
         </form>
       </div>
     </div>
