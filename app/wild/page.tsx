@@ -22,7 +22,7 @@ export default function WildPage() {
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/60 to-black z-10" />
           {/* Use a high-quality dark nature/industrial image */}
           <img 
-            src="/wild-hero.jpg" 
+            src="/assets/wild-hero.jpg" 
             alt="The Wild" 
             className="w-full h-full object-cover opacity-60"
           />
@@ -85,7 +85,7 @@ export default function WildPage() {
       {/* SECTION 3: THE VIBE (PHOTO MANTRA) */}
       <section className="h-[70vh] bg-zinc-900 flex items-center justify-center relative overflow-hidden">
         <div className="absolute inset-0 opacity-30 grayscale contrast-125">
-             <img src="/wild-texture.jpg" className="w-full h-full object-cover" />
+             <img src="/assets/wild-texture.jpg" className="w-full h-full object-cover" />
         </div>
         <h2 className="relative z-10 text-[12vw] font-black italic uppercase opacity-10 tracking-tighter select-none">
             RECLAIM THE NIGHT
