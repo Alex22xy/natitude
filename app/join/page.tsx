@@ -26,21 +26,23 @@ export default function JoinPage() {
   }
 
   useEffect(() => {
-    fetchCount();
+      fetchCount();
 
-    // REALTIME: Listen for new signups and update the UI instantly
-    const channel = supabase
-      ?.channel('realtime-signups')
-      .on('postgres_changes', 
-        { event: 'INSERT', schema: 'public', table: 'signups' }, 
-        () => fetchCount()
-      )
-      .subscribe();
+      const channel = supabase
+        ?.channel('realtime-signups')
+        .on('postgres_changes', 
+          { event: 'INSERT', schema: 'public', table: 'signups' }, 
+          () => fetchCount()
+        )
+        .subscribe();
 
-    return () => {
-      if (supabase) supabase.removeChannel(channel);
-    };
-  }, []);
+      return () => {
+        // Check if BOTH supabase and channel exist before removing
+        if (supabase && channel) {
+          supabase.removeChannel(channel);
+        }
+      };
+    }, []);
 
   const isTier1 = signupCount < 50;
   const isTier2 = signupCount >= 50 && signupCount < 100;
