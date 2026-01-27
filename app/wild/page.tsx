@@ -47,62 +47,61 @@ export default function WildPage() {
         </div>
       </section>
 
-      {/* SECTION 2.5: THE INSTALLATION (BALL PIT) */}
-<section className="py-32 px-6">
-  <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-    
-    {/* Visual Side */}
-    <motion.div 
-      initial={{ opacity: 0, scale: 0.9 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      className="relative aspect-[4/5] bg-zinc-900 rounded-2xl overflow-hidden border border-white/10 shadow-2xl"
-    >
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />
-      {/* REPLACE WITH YOUR BALL PIT IMAGE */}
-      <img 
-        src="/assets/ball-pit.jpg" 
-        alt="The Installation" 
-        className="w-full h-full object-cover hover:scale-110 transition-transform duration-[2s]"
-      />
-      <div className="absolute bottom-8 left-8 z-20">
-        <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[#FF00FF]">Installation 01</span>
-      </div>
-    </motion.div>
+      {/* SECTION 2.5: THE INSTALLATION (BALL PIT) - RESIZED & CENTERED */}
+        <section className="py-24 px-6 overflow-hidden">
+          <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-12 lg:gap-20">
+            
+            {/* Resized Image Container: Now using max-w-sm to keep it compact */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              className="relative w-full max-w-[320px] aspect-[3/4] bg-zinc-900 rounded-xl overflow-hidden border border-white/5 shadow-2xl mx-auto md:mx-0"
+            >
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10" />
+              <img 
+                src="/assets/ball-pit.jpg" 
+                alt="The Installation" 
+                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-[1.5s] ease-out"
+              />
+              <div className="absolute bottom-6 left-6 z-20">
+                <span className="text-[8px] font-black uppercase tracking-[0.5em] text-[#FF00FF]">Exhibition 01</span>
+              </div>
+            </motion.div>
 
-    {/* Text Side */}
-    <div className="space-y-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        className="space-y-4"
-      >
-        <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter leading-none">
-          The Only <br />
-          <span className="text-white">Ball Pit.</span>
-        </h2>
-        <p className="text-[#FF00FF] font-mono text-[10px] tracking-[0.3em] uppercase">
-          A London Club First.
-        </p>
-      </motion.div>
+            {/* Text Side: Adjusted to match the smaller image scale */}
+            <div className="flex-1 space-y-6 text-center md:text-left">
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                className="space-y-2"
+              >
+                <p className="text-[#FF00FF] font-mono text-[9px] tracking-[0.4em] uppercase mb-2">
+                  London's Only Nightclub Installation
+                </p>
+                <h2 className="text-4xl md:text-6xl font-black italic uppercase tracking-tighter leading-[0.9]">
+                  The <br />
+                  <span className="text-white">Ball Pit.</span>
+                </h2>
+              </motion.div>
 
-      <motion.p 
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="text-zinc-400 text-sm leading-relaxed tracking-wide uppercase text-[10px] max-w-sm"
-      >
-        Forget the standard dancefloor. We’ve built a surrealist escape. 
-        Immersive, chaotic, and completely unique to the Natitude experience. 
-        The night is for play, not just for posing.
-      </motion.p>
-      
-      <div className="flex items-center gap-4 pt-4">
-        <div className="h-[1px] w-12 bg-[#FF00FF]" />
-        <span className="text-zinc-600 text-[8px] font-black uppercase tracking-widest">Reserved for Registry Members only</span>
-      </div>
-    </div>
-  </div>
-</section>
+              <motion.p 
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="text-zinc-500 text-[10px] leading-relaxed tracking-[0.1em] uppercase max-w-xs mx-auto md:mx-0"
+              >
+                A surrealist escape designed for the tactile. 
+                Immersive, chaotic, and completely unique to the Natitude experience. 
+                Where the night is for play, not just for posing.
+              </motion.p>
+              
+              <div className="flex items-center justify-center md:justify-start gap-4 pt-2">
+                <div className="h-[1px] w-8 bg-zinc-800" />
+                <span className="text-zinc-700 text-[7px] font-black uppercase tracking-widest italic">Members Only Access</span>
+              </div>
+            </div>
+          </div>
+        </section>
 
       {/* SECTION 3: THE VIBE (PHOTO MANTRA - UPDATED FOR READABILITY) */}
       <section className="h-screen bg-black flex items-center justify-center relative overflow-hidden">
