@@ -47,40 +47,62 @@ export default function WildPage() {
         </div>
       </section>
 
-      {/* SECTION 2: THE MANIFESTO */}
-      <section className="min-h-screen flex flex-col justify-center px-6 max-w-4xl mx-auto space-y-32 py-32">
-        <motion.div 
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          className="space-y-4"
-        >
-          <span className="text-[#FF00FF] font-mono text-xs">01 / THE INSTINCT</span>
-          <h2 className="text-4xl md:text-6xl font-light italic leading-tight uppercase tracking-tighter">
-            We stopped looking up <br />
-            <span className="text-zinc-600 font-black">and started looking at screens.</span>
-          </h2>
-          <p className="text-zinc-400 max-w-md text-sm leading-relaxed tracking-wide uppercase text-[10px]">
-            Natitude was born in the shadows of the concrete jungle. A response to the hyper-connected, yet deeply isolated world we inhabit. We are the digital detox. The midnight pulse.
-          </p>
-        </motion.div>
+      {/* SECTION 2.5: THE INSTALLATION (BALL PIT) */}
+<section className="py-32 px-6">
+  <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+    
+    {/* Visual Side */}
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.9 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      className="relative aspect-[4/5] bg-zinc-900 rounded-2xl overflow-hidden border border-white/10 shadow-2xl"
+    >
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />
+      {/* REPLACE WITH YOUR BALL PIT IMAGE */}
+      <img 
+        src="/assets/ball-pit.jpg" 
+        alt="The Installation" 
+        className="w-full h-full object-cover hover:scale-110 transition-transform duration-[2s]"
+      />
+      <div className="absolute bottom-8 left-8 z-20">
+        <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[#FF00FF]">Installation 01</span>
+      </div>
+    </motion.div>
 
-        <motion.div 
-          initial={{ opacity: 0, x: 20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          className="ml-auto text-right space-y-4"
-        >
-          <span className="text-[#FF00FF] font-mono text-xs">02 / THE MISSION</span>
-          <h2 className="text-4xl md:text-6xl font-light italic leading-tight uppercase tracking-tighter">
-            Curated Anonymity. <br />
-            <span className="text-zinc-600 font-black">Analog Connection.</span>
-          </h2>
-          <p className="text-zinc-400 max-w-md ml-auto text-sm leading-relaxed tracking-wide uppercase text-[10px]">
-            No tags. No livestreams. No noise. Just a private registry of individuals who value the presence of the moment over the vanity of the post.
-          </p>
-        </motion.div>
-      </section>
+    {/* Text Side */}
+    <div className="space-y-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        className="space-y-4"
+      >
+        <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter leading-none">
+          The Only <br />
+          <span className="text-white">Ball Pit.</span>
+        </h2>
+        <p className="text-[#FF00FF] font-mono text-[10px] tracking-[0.3em] uppercase">
+          A London Club First.
+        </p>
+      </motion.div>
+
+      <motion.p 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        className="text-zinc-400 text-sm leading-relaxed tracking-wide uppercase text-[10px] max-w-sm"
+      >
+        Forget the standard dancefloor. We’ve built a surrealist escape. 
+        Immersive, chaotic, and completely unique to the Natitude experience. 
+        The night is for play, not just for posing.
+      </motion.p>
+      
+      <div className="flex items-center gap-4 pt-4">
+        <div className="h-[1px] w-12 bg-[#FF00FF]" />
+        <span className="text-zinc-600 text-[8px] font-black uppercase tracking-widest">Reserved for Registry Members only</span>
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* SECTION 3: THE VIBE (PHOTO MANTRA - UPDATED FOR READABILITY) */}
       <section className="h-screen bg-black flex items-center justify-center relative overflow-hidden">
