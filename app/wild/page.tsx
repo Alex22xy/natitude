@@ -79,7 +79,7 @@ export default function WildPage() {
       >
         <div className="inline-block px-3 py-1 border border-[#FF00FF]/30 rounded-full mb-4">
           <p className="text-[#FF00FF] font-mono text-[8px] tracking-[0.3em] uppercase">
-            First in London
+            First in Bury St Edmunds
           </p>
         </div>
         <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-[ -0.05em] leading-[0.85]">
