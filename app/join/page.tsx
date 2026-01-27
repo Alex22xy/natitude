@@ -16,16 +16,30 @@ export default function JoinPage() {
   const [submitted, setSubmitted] = useState(false);
   const [hpValue, setHpValue] = useState(""); 
 
+  // Function to fetch the count
+  async function fetchCount() {
+    if (!supabase) return;
+    const { count, error } = await supabase
+      .from('signups')
+      .select('*', { count: 'exact', head: true });
+    if (!error && count !== null) setSignupCount(count);
+  }
+
   useEffect(() => {
-    async function fetchCount() {
-      if (!supabase) return;
-      // head: true ensures we only get the number, NO member data is downloaded
-      const { count, error } = await supabase
-        .from('signups')
-        .select('*', { count: 'exact', head: true });
-      if (!error && count !== null) setSignupCount(count);
-    }
     fetchCount();
+
+    // REALTIME: Listen for new signups and update the UI instantly
+    const channel = supabase
+      ?.channel('realtime-signups')
+      .on('postgres_changes', 
+        { event: 'INSERT', schema: 'public', table: 'signups' }, 
+        () => fetchCount()
+      )
+      .subscribe();
+
+    return () => {
+      if (supabase) supabase.removeChannel(channel);
+    };
   }, []);
 
   const isTier1 = signupCount < 50;
@@ -37,24 +51,28 @@ export default function JoinPage() {
     if (hpValue !== "" || !supabase) return; 
 
     const formData = new FormData(e.currentTarget);
+    const name = formData.get("name") as string;
+    const instagram = formData.get("instagram") as string;
     const tel = formData.get("telephone") as string;
-    const phoneRegex = /^(?:0|\+44)\d{10,12}$/;
     
+    const phoneRegex = /^(?:0|\+44)\d{10,12}$/;
     if (!phoneRegex.test(tel.replace(/\s/g, ""))) {
       alert("Please enter a valid UK mobile number.");
       return;
     }
 
     setLoading(true);
+
     const data = {
-      name: formData.get("name"),
+      name: name,
       telephone: tel,
-      instagram: formData.get("instagram"),
+      instagram: instagram,
       email: formData.get("email"),
       tier: isTier1 ? "Tier 1: Free Entry + Shot" : isTier2 ? "Tier 2: Free Shot" : "Standard"
     };
 
     try {
+      // 1. Insert into Supabase
       const { error: dbError } = await supabase
         .from('signups')
         .insert([{ 
@@ -66,6 +84,11 @@ export default function JoinPage() {
 
       if (dbError) throw dbError;
 
+      // 2. Save to LocalStorage for the Profile Page
+      localStorage.setItem("natitude_name", name);
+      localStorage.setItem("natitude_handle", instagram);
+
+      // 3. Send Email Notification
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -74,6 +97,7 @@ export default function JoinPage() {
 
       if (response.ok) setSubmitted(true);
     } catch (error) {
+      console.error(error);
       alert("Transmission failed. Secure link unavailable.");
     } finally {
       setLoading(false);
@@ -85,7 +109,15 @@ export default function JoinPage() {
       <div className="min-h-screen bg-black flex items-center justify-center px-6 text-center">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <h2 className="text-[#FF00FF] text-3xl font-black italic uppercase mb-2">Access Requested.</h2>
-          <p className="text-zinc-500 text-[10px] tracking-[0.3em] uppercase">Private confirmation sent to your email.</p>
+          <p className="text-zinc-500 text-[10px] tracking-[0.3em] uppercase mb-8 text-balance">
+            Private confirmation sent to your email.
+          </p>
+          <a 
+            href="/profile" 
+            className="px-8 py-4 border border-white/20 text-white text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all"
+          >
+            View Membership Card
+          </a>
         </motion.div>
       </div>
     );
@@ -95,7 +127,6 @@ export default function JoinPage() {
     <div className="min-h-screen bg-black pt-24 px-6 pb-32">
       <div className="max-w-md mx-auto">
         
-        {/* PROMO STATUS */}
         {promoActive && (
           <div className="mb-10 p-6 rounded-2xl border border-[#FF00FF]/20 bg-[#FF00FF]/5 relative overflow-hidden">
             <div className="flex justify-between items-center mb-2">
@@ -105,7 +136,13 @@ export default function JoinPage() {
               <span className="text-zinc-600 text-[9px] font-mono uppercase">{100 - signupCount} Spots Left</span>
             </div>
             <h2 className="text-white text-lg font-light italic">{isTier1 ? "Free Entry + Shot Unlocked" : "Free Shot Unlocked"}</h2>
-            <div className="mt-4 h-[1px] w-full bg-white/10"><motion.div initial={{ width: 0 }} animate={{ width: `${(signupCount / 100) * 100}%` }} className="h-full bg-[#FF00FF]" /></div>
+            <div className="mt-4 h-[1px] w-full bg-white/10">
+                <motion.div 
+                    initial={{ width: 0 }} 
+                    animate={{ width: `${(signupCount / 100) * 100}%` }} 
+                    className="h-full bg-[#FF00FF]" 
+                />
+            </div>
           </div>
         )}
 
@@ -114,7 +151,6 @@ export default function JoinPage() {
             Member <br /> <span className="italic font-black text-[#FF00FF]">Application</span>
           </h1>
           
-          {/* PRIVACY BADGE */}
           <div className="mt-6 flex items-center justify-center gap-2 py-2 px-4 border border-zinc-800 rounded-full w-fit mx-auto">
             <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
             <span className="text-[8px] text-zinc-500 font-black tracking-[0.2em] uppercase">
