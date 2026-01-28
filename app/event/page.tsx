@@ -3,8 +3,19 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import JoinPage from "../join/page"; 
 
-// Update the first date to a future time to see the timer in action
-const EVENTS = [
+// Define a proper type for our events to satisfy TypeScript
+interface ClubEvent {
+  id: number;
+  targetDate?: string; // Optional because not all events need a live timer
+  date: string;
+  name: string;
+  location: string;
+  status: string;
+  type: string;
+  image: string;
+}
+
+const EVENTS: ClubEvent[] = [
   {
     id: 1,
     targetDate: "2026-02-14T22:00:00", 
@@ -46,9 +57,12 @@ export default function EventsPage() {
     const savedName = localStorage.getItem("natitude_name");
     if (savedName) setIsAlreadyMember(true);
 
-    // Countdown Timer Logic
+    // Only start timer if the first event has a valid targetDate
+    const firstEventDate = EVENTS[0]?.targetDate;
+    if (!firstEventDate) return;
+
     const timer = setInterval(() => {
-      const target = new Date(EVENTS[0].targetDate).getTime();
+      const target = new Date(firstEventDate).getTime();
       const now = new Date().getTime();
       const difference = target - now;
 
@@ -59,6 +73,8 @@ export default function EventsPage() {
           minutes: Math.floor((difference / 1000 / 60) % 60),
           seconds: Math.floor((difference / 1000) % 60),
         });
+      } else {
+        clearInterval(timer);
       }
     }, 1000);
 
@@ -123,7 +139,6 @@ export default function EventsPage() {
             transition={{ duration: 0.8 }}
             className="group relative flex flex-col gap-8"
           >
-            {/* Cinematic Image Container */}
             <div className="relative w-full aspect-[16/8] overflow-hidden rounded-sm border border-white/5 bg-zinc-900 shadow-2xl">
               <img 
                 src={event.image} 
@@ -139,7 +154,6 @@ export default function EventsPage() {
               </div>
             </div>
 
-            {/* Content Body */}
             <div className="flex-1 border-l-2 border-[#FF00FF]/30 pl-8 relative">
               <div className="absolute -left-[5px] top-0 h-2.5 w-2.5 rounded-full bg-[#FF00FF] shadow-[0_0_15px_#FF00FF]" />
               
