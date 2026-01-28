@@ -1,130 +1,104 @@
 "use client";
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import JoinPage from "../join/page"; 
+import { motion } from "framer-motion";
 
-const EVENTS = [
+const events = [
   {
     id: 1,
+    title: "The Midnight Ball",
     date: "FEB 14",
-    name: "Neon Velour",
-    location: "London — Secret",
-    status: "Invites Only",
-    type: "Warehouse",
-    image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=2070" 
+    location: "Main Installation",
+    status: "Priority Access",
+    time: "22:00 - LATE",
   },
   {
     id: 2,
-    date: "MAR 02",
-    name: "The Altar: Session I",
-    location: "Dubai — DIFC",
-    status: "Table Access Only",
-    type: "Club",
-    image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=2070"
+    title: "Neon Jungle",
+    date: "FEB 28",
+    location: "The Wild",
+    status: "Sold Out",
+    time: "21:00 - 04:00",
   },
   {
     id: 3,
-    date: "MAR 21",
-    name: "Biological Evolution",
-    location: "Miami — Wynwood",
-    status: "Application Open",
-    type: "Underground",
-    image: "https://images.unsplash.com/photo-1571266028243-e4733b0f0bb1?q=80&w=2070"
+    title: "Analog Night",
+    date: "MAR 12",
+    location: "Secret Location",
+    status: "Registration Open",
+    time: "23:00 - LATE",
   }
 ];
 
-export default function EventsPage() {
-  const [showDrawer, setShowDrawer] = useState(false);
-  const [isAlreadyMember, setIsAlreadyMember] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    const savedName = localStorage.getItem("natitude_name");
-    if (savedName) setIsAlreadyMember(true);
-  }, []);
-
-  // Prevents hydration errors
-  if (!mounted) return <div className="min-h-screen bg-black" />;
-
+export default function EventPage() {
   return (
-    <div className="min-h-screen bg-black pt-32 px-6 pb-32">
-      <header className="mb-16">
-        <h2 className="text-[#FF00FF] font-bold tracking-[0.3em] uppercase text-[10px] mb-4">The Radar</h2>
-        <h1 className="text-4xl font-light tracking-tighter uppercase text-white">
-          Upcoming <br />
-          <span className="italic font-black text-[#FF00FF]">Incidents.</span>
-        </h1>
+    <div className="min-h-screen bg-black text-white px-6 pt-12">
+      {/* Header Section */}
+      <header className="mb-12">
+        <motion.p 
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="text-[#FF00FF] font-mono text-[10px] tracking-[0.4em] uppercase mb-2"
+        >
+          Upcoming Drops
+        </motion.p>
+        <motion.h1 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-5xl font-black italic uppercase tracking-tighter"
+        >
+          The <span className="text-[#FF00FF]">Schedule</span>
+        </motion.h1>
       </header>
 
-      <div className="space-y-16">
-        {EVENTS.map((event, index) => (
-          <motion.div 
+      {/* Events List */}
+      <div className="space-y-4">
+        {events.map((event, index) => (
+          <motion.div
             key={event.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="group relative flex flex-col gap-6"
+            className="group relative overflow-hidden bg-zinc-900/40 border border-white/5 rounded-2xl p-6 transition-all hover:border-[#FF00FF]/50"
           >
-            {/* Image Container */}
-            <div className="relative w-full aspect-[21/9] overflow-hidden rounded-xl border border-white/5 bg-zinc-900">
-              <img 
-                src={event.image} 
-                alt={event.name}
-                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 opacity-50 group-hover:opacity-100"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60" />
-            </div>
-
-            <div className="flex-1 border-l border-white/10 pl-6 relative">
-              <div className="absolute -left-[5px] top-0 h-2 w-2 rounded-full bg-[#FF00FF]" />
-              
-              <div className="flex justify-between items-start mb-2">
-                <span className="text-xs font-mono text-zinc-500">{event.date} // {event.type}</span>
-                <span className="text-[8px] border border-white/20 px-2 py-1 rounded text-zinc-400 uppercase tracking-widest">{event.status}</span>
+            <div className="flex justify-between items-start relative z-10">
+              <div className="space-y-1">
+                <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">{event.date}</span>
+                <h3 className="text-2xl font-black italic uppercase tracking-tight group-hover:text-[#FF00FF] transition-colors">
+                  {event.title}
+                </h3>
+                <p className="text-[10px] text-zinc-400 uppercase tracking-widest">{event.location} // {event.time}</p>
               </div>
               
-              <h3 className="text-2xl font-bold uppercase italic tracking-tighter text-white group-hover:text-[#FF00FF] transition-colors">
-                {event.name}
-              </h3>
-              <p className="text-sm text-zinc-500 font-light">{event.location}</p>
+              <div className={`px-3 py-1 rounded-full border text-[8px] font-black uppercase tracking-widest ${
+                event.status === "Sold Out" 
+                ? "border-red-500/50 text-red-500" 
+                : "border-[#FF00FF]/50 text-[#FF00FF]"
+              }`}>
+                {event.status}
+              </div>
             </div>
+
+            {/* Hover Background Glow */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#FF00FF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           </motion.div>
         ))}
       </div>
 
-      <div className="mt-20 p-8 rounded-[2rem] bg-zinc-900/30 border border-white/5 text-center">
-        <button 
-          onClick={() => !isAlreadyMember && setShowDrawer(true)}
-          className={`pb-1 text-xs uppercase tracking-[0.4em] font-black italic border-b ${
-            isAlreadyMember ? "text-zinc-600 border-zinc-800" : "text-white border-[#FF00FF]"
-          }`}
-        >
-          {isAlreadyMember ? "On the list" : "Join waitlist"}
-        </button>
-      </div>
-
-      <AnimatePresence>
-        {showDrawer && (
-          <>
-            <motion.div 
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              onClick={() => setShowDrawer(false)}
-              className="fixed inset-0 bg-black/90 backdrop-blur-xl z-[60]"
-            />
-            <motion.div 
-              initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 30 }}
-              className="fixed inset-x-0 bottom-0 h-[92vh] bg-black border-t border-white/10 rounded-t-[3rem] z-[70] overflow-y-auto"
-            >
-               <div className="sticky top-0 w-full flex justify-center py-6 bg-black/80 backdrop-blur-md z-20">
-                <button onClick={() => setShowDrawer(false)} className="h-1.5 w-16 bg-zinc-800 rounded-full" />
-              </div>
-              <div className="pb-24"><JoinPage /></div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+      {/* Footer Info */}
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.3 }}
+        transition={{ delay: 0.8 }}
+        className="mt-20 text-center"
+      >
+        <p className="text-[9px] uppercase tracking-[0.5em] font-medium leading-loose">
+          Location details for "Secret" events <br /> 
+          are pushed to your Registry ID <br />
+          2 hours before doors.
+        </p>
+      </motion.div>
+      
+      {/* Navigation Spacer */}
+      <div className="h-32" />
     </div>
   );
 }
