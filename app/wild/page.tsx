@@ -10,7 +10,7 @@ export default function WildPage() {
     offset: ["start start", "end end"],
   });
 
-  // Subtle parallax for the background
+  // Subtle parallax for the background hero
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
 
   return (
@@ -19,7 +19,6 @@ export default function WildPage() {
       {/* SECTION 1: THE HOOK */}
       <section className="h-screen relative flex items-center justify-center overflow-hidden">
         <motion.div style={{ y }} className="absolute inset-0 z-0">
-          {/* Darker gradient overlay for better text contrast */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/80 to-black z-10" />
           <img 
             src="/assets/wild-hero.jpg" 
@@ -47,76 +46,75 @@ export default function WildPage() {
         </div>
       </section>
 
-      {/* SECTION 2.5: THE INSTALLATION (BALL PIT) - CINEMATIC WIDE */}
-<section className="py-32 px-6 overflow-hidden bg-zinc-950/20">
-  <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-16">
-    
-    {/* Wider, Cinematic Image Container */}
-    <motion.div 
-      initial={{ opacity: 0, x: -30 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.8 }}
-      className="relative w-full md:w-[450px] aspect-[16/10] bg-zinc-900 rounded-lg overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] mx-auto md:mx-0"
-    >
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10" />
-      <img 
-        src="/assets/ball-pit.jpg" 
-        alt="The Installation" 
-        className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-[1.2s] ease-in-out scale-105 hover:scale-100"
-      />
-      <div className="absolute bottom-5 left-6 z-20 flex items-center gap-3">
-        <div className="w-1 h-1 bg-[#FF00FF] rounded-full animate-pulse" />
-        <span className="text-[7px] font-black uppercase tracking-[0.6em] text-white/50">Installation Ref: 001</span>
-      </div>
-    </motion.div>
+      {/* SECTION 2: THE INSTALLATION (BALL PIT) */}
+      <section className="py-32 px-6 overflow-hidden bg-zinc-950/20">
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-16">
+          
+          {/* Cinematic Image Container */}
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="relative w-full md:w-[450px] aspect-[16/10] bg-zinc-900 rounded-lg overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] mx-auto md:mx-0"
+          >
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10" />
+            <img 
+              src="/assets/ball-pit.jpg" 
+              alt="The Installation" 
+              className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-[1.2s] ease-in-out scale-105 hover:scale-100"
+            />
+            <div className="absolute bottom-5 left-6 z-20 flex items-center gap-3">
+              <div className="w-1 h-1 bg-[#FF00FF] rounded-full animate-pulse" />
+              <span className="text-[7px] font-black uppercase tracking-[0.6em] text-white/50">Installation Ref: 001</span>
+            </div>
+          </motion.div>
 
-    {/* Expanded Text Side */}
-    <div className="flex-1 space-y-8 text-center md:text-left">
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        className="space-y-3"
-      >
-        <div className="inline-block px-3 py-1 border border-[#FF00FF]/30 rounded-full mb-4">
-          <p className="text-[#FF00FF] font-mono text-[8px] tracking-[0.3em] uppercase">
-            First in Bury St Edmunds
-          </p>
+          {/* Text Side */}
+          <div className="flex-1 space-y-8 text-center md:text-left">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              className="space-y-3"
+            >
+              <div className="inline-block px-3 py-1 border border-[#FF00FF]/30 rounded-full mb-4">
+                <p className="text-[#FF00FF] font-mono text-[8px] tracking-[0.3em] uppercase">
+                  First in Bury St Edmunds
+                </p>
+              </div>
+              <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-[-0.05em] leading-[0.85]">
+                The Only <br />
+                <span className="text-white">Ball Pit.</span>
+              </h2>
+            </motion.div>
+
+            <motion.p 
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="text-zinc-400 text-[11px] leading-relaxed tracking-wider uppercase max-w-sm mx-auto md:mx-0 italic font-medium"
+            >
+              A surrealist landscape designed for the tactile. 
+              Forget the standard dancefloor; reclaim the night in a 
+              sea of movement. Immersive, chaotic, and completely 
+              exclusive to the Natitude registry.
+            </motion.p>
+            
+            <motion.div 
+              initial={{ width: 0 }}
+              whileInView={{ width: "100%" }}
+              className="pt-4"
+            >
+              <div className="h-[1px] w-full bg-gradient-to-r from-[#FF00FF]/50 to-transparent" />
+              <p className="text-zinc-700 text-[8px] font-black uppercase tracking-[0.4em] mt-4">
+                Access strictly limited to Tier 1 Members
+              </p>
+            </motion.div>
+          </div>
         </div>
-        <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-[ -0.05em] leading-[0.85]">
-          The Only <br />
-          <span className="text-white text-stroke-sm">Ball Pit.</span>
-        </h2>
-      </motion.div>
+      </section>
 
-      <motion.p 
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-        className="text-zinc-400 text-[11px] leading-relaxed tracking-wider uppercase max-w-sm mx-auto md:mx-0 italic font-medium"
-      >
-        A surrealist landscape designed for the tactile. 
-        Forget the standard dancefloor; reclaim the night in a 
-        sea of movement. Immersive, chaotic, and completely 
-        exclusive to the Natitude registry.
-      </motion.p>
-      
-      <motion.div 
-        initial={{ width: 0 }}
-        whileInView={{ width: "100%" }}
-        className="pt-4"
-      >
-        <div className="h-[1px] w-full bg-gradient-to-r from-[#FF00FF]/50 to-transparent" />
-        <p className="text-zinc-700 text-[8px] font-black uppercase tracking-[0.4em] mt-4">
-          Access strictly limited to Tier 1 Members
-        </p>
-      </motion.div>
-    </div>
-  </div>
-</section>
-
-      {/* SECTION 3: THE VIBE (PHOTO MANTRA - UPDATED FOR READABILITY) */}
+      {/* SECTION 3: THE VIBE (PHOTO MANTRA) */}
       <section className="h-screen bg-black flex items-center justify-center relative overflow-hidden">
-        {/* Background texture with a darker overlay to make white text pop */}
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-black/60 z-10" /> 
           <img 
@@ -158,6 +156,10 @@ export default function WildPage() {
             </Link>
         </motion.div>
       </section>
+
+      {/* BOTTOM NAV SPACER */}
+      {/* This ensures the BottomNav doesn't cover your footer content */}
+      <div className="h-32 bg-black" />
 
     </div>
   );
