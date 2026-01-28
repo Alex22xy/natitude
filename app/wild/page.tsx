@@ -16,7 +16,7 @@ export default function WildPage() {
   return (
     <div ref={containerRef} className="bg-black text-white selection:bg-[#FF00FF]">
       
-      {/* SECTION 1: THE VIDEO HERO (REWRITTEN FOR FULL IMPACT) */}
+      {/* SECTION 1: THE VIDEO HERO */}
       <section className="h-screen relative flex items-center justify-center overflow-hidden">
         <motion.div style={{ y }} className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/60 to-black z-10" />
@@ -48,13 +48,14 @@ export default function WildPage() {
             transition={{ duration: 1, ease: "easeOut" }}
             className="text-7xl md:text-[12vw] font-black italic uppercase tracking-tighter leading-none"
             style={{
-              textShadow: "0 0 50px rgba(255, 0, 255, 0.3)" // Subtle pink glow
+              textShadow: "0 0 50px rgba(255, 0, 255, 0.3)" 
             }}
           >
             The <br className="md:hidden" /> 
             <span className="text-[#FF00FF]">Wild</span>
           </motion.h1>
 
+          {/* Corrected the motion tag below */}
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.5 }}
@@ -62,7 +63,7 @@ export default function WildPage() {
             className="mt-8"
           >
             <div className="w-[1px] h-12 bg-gradient-to-b from-[#FF00FF] to-transparent mx-auto animate-bounce" />
-          </motion.p>
+          </motion.div>
         </div>
       </section>
 
