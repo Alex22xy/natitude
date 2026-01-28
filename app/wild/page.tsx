@@ -16,15 +16,23 @@ export default function WildPage() {
   return (
     <div ref={containerRef} className="bg-black text-white selection:bg-[#FF00FF]">
       
-      {/* SECTION 1: THE HOOK */}
+      {/* SECTION 1: THE VIDEO HERO */}
       <section className="h-screen relative flex items-center justify-center overflow-hidden">
         <motion.div style={{ y }} className="absolute inset-0 z-0">
+          {/* Darker gradient overlay for better text contrast */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/80 to-black z-10" />
-          <img 
-            src="/assets/wild-hero.jpg" 
-            alt="The Wild" 
+          
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
             className="w-full h-full object-cover opacity-50"
-          />
+          >
+            <source src="/assets/jungle.mp4" type="video/mp4" />
+            {/* Fallback image in case video fails to load */}
+            <img src="/assets/wild-hero.jpg" alt="The Wild" className="w-full h-full object-cover" />
+          </video>
         </motion.div>
 
         <div className="relative z-20 text-center">
@@ -50,7 +58,6 @@ export default function WildPage() {
       <section className="py-32 px-6 overflow-hidden bg-zinc-950/20">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-16">
           
-          {/* Cinematic Image Container */}
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -69,7 +76,6 @@ export default function WildPage() {
             </div>
           </motion.div>
 
-          {/* Text Side */}
           <div className="flex-1 space-y-8 text-center md:text-left">
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -83,7 +89,7 @@ export default function WildPage() {
               </div>
               <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-[-0.05em] leading-[0.85]">
                 The Only <br />
-                <span className="text-white">Ball Pit.</span>
+                <span className="text-white text-stroke-sm">Ball Pit.</span>
               </h2>
             </motion.div>
 
@@ -113,7 +119,7 @@ export default function WildPage() {
         </div>
       </section>
 
-      {/* SECTION 3: THE VIBE (PHOTO MANTRA) */}
+      {/* SECTION 3: THE MANTRA */}
       <section className="h-screen bg-black flex items-center justify-center relative overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-black/60 z-10" /> 
@@ -157,8 +163,6 @@ export default function WildPage() {
         </motion.div>
       </section>
 
-      {/* BOTTOM NAV SPACER */}
-      {/* This ensures the BottomNav doesn't cover your footer content */}
       <div className="h-32 bg-black" />
 
     </div>
