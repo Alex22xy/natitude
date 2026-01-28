@@ -3,9 +3,11 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import JoinPage from "../join/page"; 
 
+// Update the first date to a future time to see the timer in action
 const EVENTS = [
   {
     id: 1,
+    targetDate: "2026-02-14T22:00:00", 
     date: "FEB 14",
     name: "Neon Velour",
     location: "Bury St Edmunds — Secret",
@@ -37,126 +39,169 @@ export default function EventsPage() {
   const [showDrawer, setShowDrawer] = useState(false);
   const [isAlreadyMember, setIsAlreadyMember] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
     setMounted(true);
     const savedName = localStorage.getItem("natitude_name");
     if (savedName) setIsAlreadyMember(true);
+
+    // Countdown Timer Logic
+    const timer = setInterval(() => {
+      const target = new Date(EVENTS[0].targetDate).getTime();
+      const now = new Date().getTime();
+      const difference = target - now;
+
+      if (difference > 0) {
+        setTimeLeft({
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+          minutes: Math.floor((difference / 1000 / 60) % 60),
+          seconds: Math.floor((difference / 1000) % 60),
+        });
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
   }, []);
 
   if (!mounted) return <div className="min-h-screen bg-black" />;
 
   return (
-    <div className="min-h-screen bg-black pt-32 px-6 pb-32 selection:bg-[#FF00FF]">
+    <div className="min-h-screen bg-black pt-24 px-6 pb-40 selection:bg-[#FF00FF]">
       
-      {/* HEADER: THE RADAR */}
+      {/* 01. LIVE COUNTDOWN GRID */}
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-16 grid grid-cols-4 gap-2 max-w-sm mx-auto md:mx-0"
+      >
+        {[
+          { label: "Days", val: timeLeft.days },
+          { label: "Hrs", val: timeLeft.hours },
+          { label: "Min", val: timeLeft.minutes },
+          { label: "Sec", val: timeLeft.seconds },
+        ].map((unit) => (
+          <div key={unit.label} className="bg-zinc-900/40 border border-white/5 rounded-lg py-3 flex flex-col items-center justify-center backdrop-blur-sm">
+            <span className="text-xl font-black text-white tabular-nums tracking-tighter">
+              {String(unit.val).padStart(2, '0')}
+            </span>
+            <span className="text-[7px] uppercase font-black tracking-[0.2em] text-[#FF00FF] mt-1">
+              {unit.label}
+            </span>
+          </div>
+        ))}
+      </motion.div>
+
+      {/* 02. HEADER: THE RADAR */}
       <header className="mb-20">
-        <motion.h2 
+        <motion.p 
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           className="text-[#FF00FF] font-bold tracking-[0.4em] uppercase text-[10px] mb-4"
         >
           The Radar
-        </motion.h2>
+        </motion.p>
         <motion.h1 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-5xl font-light tracking-tighter uppercase text-white leading-none"
+          className="text-5xl md:text-7xl font-light tracking-tighter uppercase text-white leading-none"
         >
           Upcoming <br />
           <span className="italic font-black text-[#FF00FF]">Incidents.</span>
         </motion.h1>
       </header>
 
-      {/* EVENTS FEED */}
-      <div className="space-y-24">
+      {/* 03. EVENTS FEED */}
+      <div className="space-y-32">
         {EVENTS.map((event, index) => (
           <motion.div 
             key={event.id}
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: index * 0.1, duration: 0.8 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8 }}
             className="group relative flex flex-col gap-8"
           >
-            {/* Image Container with Cinematic Zoom */}
-            <div className="relative w-full aspect-[16/7] overflow-hidden rounded-sm border border-white/5 bg-zinc-900">
+            {/* Cinematic Image Container */}
+            <div className="relative w-full aspect-[16/8] overflow-hidden rounded-sm border border-white/5 bg-zinc-900 shadow-2xl">
               <img 
                 src={event.image} 
                 alt={event.name}
-                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-[2s] ease-out opacity-40 group-hover:opacity-80 scale-110 group-hover:scale-100"
+                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-[2.5s] ease-out opacity-30 group-hover:opacity-90 scale-110 group-hover:scale-100"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
               
-              {/* Type Badge Floating on Image */}
               <div className="absolute top-4 right-4">
-                 <span className="text-[8px] font-mono bg-black/60 backdrop-blur-md border border-white/10 px-3 py-1 text-zinc-400 uppercase tracking-widest">
+                 <span className="text-[8px] font-mono bg-black/80 backdrop-blur-md border border-white/10 px-4 py-1.5 text-zinc-400 uppercase tracking-widest rounded-full">
                     {event.type}
                  </span>
               </div>
             </div>
 
             {/* Content Body */}
-            <div className="flex-1 border-l-2 border-[#FF00FF]/20 pl-8 relative">
-              <div className="absolute -left-[5px] top-0 h-2 w-2 rounded-full bg-[#FF00FF] shadow-[0_0_10px_#FF00FF]" />
+            <div className="flex-1 border-l-2 border-[#FF00FF]/30 pl-8 relative">
+              <div className="absolute -left-[5px] top-0 h-2.5 w-2.5 rounded-full bg-[#FF00FF] shadow-[0_0_15px_#FF00FF]" />
               
-              <div className="flex justify-between items-baseline mb-3">
-                <span className="text-xs font-mono text-[#FF00FF]/60 font-bold">{event.date}</span>
-                <span className="text-[9px] font-black text-zinc-500 uppercase tracking-widest">{event.status}</span>
+              <div className="flex justify-between items-baseline mb-4">
+                <span className="text-xs font-mono text-[#FF00FF] font-black">{event.date}</span>
+                <span className="text-[9px] font-black text-zinc-500 uppercase tracking-widest border border-zinc-800 px-2 py-0.5 rounded">
+                    {event.status}
+                </span>
               </div>
               
-              <h3 className="text-3xl font-black uppercase italic tracking-tighter text-white leading-tight mb-2 group-hover:tracking-normal transition-all duration-500">
+              <h3 className="text-4xl font-black uppercase italic tracking-tighter text-white leading-tight mb-3 group-hover:text-[#FF00FF] transition-colors duration-500">
                 {event.name}
               </h3>
-              <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">{event.location}</p>
+              <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.3em]">{event.location}</p>
             </div>
           </motion.div>
         ))}
       </div>
 
-      {/* CTA SECTION */}
+      {/* 04. CTA SECTION */}
       <motion.div 
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
-        className="mt-32 p-12 rounded-3xl bg-zinc-950 border border-white/5 text-center shadow-2xl"
+        className="mt-40 p-12 rounded-[2.5rem] bg-zinc-950 border border-white/5 text-center shadow-2xl"
       >
-        <p className="text-zinc-500 text-[10px] uppercase tracking-[0.3em] mb-8">Missing the drop?</p>
+        <p className="text-zinc-500 text-[10px] uppercase tracking-[0.4em] mb-10 italic">Missing the drop?</p>
         <button 
           onClick={() => !isAlreadyMember && setShowDrawer(true)}
-          className={`group relative inline-block px-10 py-4 overflow-hidden rounded-full border transition-all ${
+          className={`group relative inline-block px-12 py-5 overflow-hidden rounded-full border transition-all duration-500 ${
             isAlreadyMember 
-              ? "text-zinc-600 border-zinc-800 cursor-default" 
-              : "text-white border-[#FF00FF] hover:shadow-[0_0_30px_rgba(255,0,255,0.2)]"
+              ? "text-zinc-600 border-zinc-900 cursor-default" 
+              : "text-white border-[#FF00FF] hover:shadow-[0_0_40px_rgba(255,0,255,0.3)]"
           }`}
         >
-          <span className="relative z-10 text-[10px] font-black uppercase tracking-[0.2em]">
-            {isAlreadyMember ? "Registered Member" : "Request Access"}
+          <span className="relative z-10 text-[11px] font-black uppercase tracking-[0.3em]">
+            {isAlreadyMember ? "Registry Active" : "Request Access"}
           </span>
           {!isAlreadyMember && (
-            <div className="absolute inset-0 bg-[#FF00FF] translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+            <div className="absolute inset-0 bg-[#FF00FF] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-in-out" />
           )}
         </button>
       </motion.div>
 
-      {/* REGISTRY DRAWER */}
+      {/* 05. REGISTRY DRAWER */}
       <AnimatePresence>
         {showDrawer && (
           <>
             <motion.div 
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setShowDrawer(false)}
-              className="fixed inset-0 bg-black/95 backdrop-blur-2xl z-[60]"
+              className="fixed inset-0 bg-black/95 backdrop-blur-3xl z-[60]"
             />
             <motion.div 
               initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 30, stiffness: 200 }}
-              className="fixed inset-x-0 bottom-0 h-[92vh] bg-black border-t border-white/10 rounded-t-[3rem] z-[70] overflow-y-auto"
+              transition={{ type: "spring", damping: 35, stiffness: 250 }}
+              className="fixed inset-x-0 bottom-0 h-[94vh] bg-black border-t border-white/10 rounded-t-[3.5rem] z-[70] overflow-y-auto hide-scrollbar"
             >
                <div className="sticky top-0 w-full flex flex-col items-center py-6 bg-black/90 backdrop-blur-md z-20">
-                <button onClick={() => setShowDrawer(false)} className="h-1 w-12 bg-zinc-800 rounded-full hover:bg-[#FF00FF] transition-colors" />
-                <span className="text-[8px] font-black uppercase tracking-[0.5em] text-zinc-600 mt-4">Registry Entry</span>
+                <button onClick={() => setShowDrawer(false)} className="h-1.5 w-16 bg-zinc-800 rounded-full hover:bg-[#FF00FF] transition-colors" />
+                <span className="text-[8px] font-black uppercase tracking-[0.6em] text-zinc-700 mt-5">Registry Identification Required</span>
               </div>
-              <div className="pb-24"><JoinPage /></div>
+              <div className="pb-32"><JoinPage /></div>
             </motion.div>
           </>
         )}
