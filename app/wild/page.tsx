@@ -16,41 +16,53 @@ export default function WildPage() {
   return (
     <div ref={containerRef} className="bg-black text-white selection:bg-[#FF00FF]">
       
-      {/* SECTION 1: THE VIDEO HERO */}
+      {/* SECTION 1: THE VIDEO HERO (REWRITTEN FOR FULL IMPACT) */}
       <section className="h-screen relative flex items-center justify-center overflow-hidden">
         <motion.div style={{ y }} className="absolute inset-0 z-0">
-          {/* Darker gradient overlay for better text contrast */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/80 to-black z-10" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/60 to-black z-10" />
           
           <video
             autoPlay
             loop
             muted
             playsInline
-            className="w-full h-full object-cover opacity-50"
+            className="w-full h-full object-cover opacity-60"
           >
             <source src="/assets/jungle.mp4" type="video/mp4" />
-            {/* Fallback image in case video fails to load */}
-            <img src="/assets/wild-hero.jpg" alt="The Wild" className="w-full h-full object-cover" />
           </video>
         </motion.div>
 
-        <div className="relative z-20 text-center">
+        <div className="relative z-20 text-center px-4">
           <motion.p 
             initial={{ opacity: 0, letterSpacing: "0.2em" }}
             animate={{ opacity: 1, letterSpacing: "0.8em" }}
             transition={{ duration: 1.5 }}
-            className="text-[10px] uppercase text-[#FF00FF] font-black mb-6"
+            className="text-[10px] md:text-[12px] uppercase text-[#FF00FF] font-black mb-4"
           >
             Origin Story
           </motion.p>
+          
           <motion.h1 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-6xl md:text-9xl font-black italic uppercase tracking-tighter"
+            initial={{ opacity: 0, y: 40, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            className="text-7xl md:text-[12vw] font-black italic uppercase tracking-tighter leading-none"
+            style={{
+              textShadow: "0 0 50px rgba(255, 0, 255, 0.3)" // Subtle pink glow
+            }}
           >
-            The <span className="text-[#FF00FF]">Wild</span>
+            The <br className="md:hidden" /> 
+            <span className="text-[#FF00FF]">Wild</span>
           </motion.h1>
+
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.5 }}
+            transition={{ delay: 1, duration: 2 }}
+            className="mt-8"
+          >
+            <div className="w-[1px] h-12 bg-gradient-to-b from-[#FF00FF] to-transparent mx-auto animate-bounce" />
+          </motion.p>
         </div>
       </section>
 
