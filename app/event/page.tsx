@@ -111,11 +111,11 @@ export default function EventsPage() {
         </motion.div>
       </div>
 
-      {/* 02. HEADER: THE RADAR */}
-      <header className="mb-20">
+      {/* 02. HEADER: THE RADAR - CENTERED */}
+      <header className="mb-20 text-center flex flex-col items-center">
         <motion.p 
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
           className="text-[#FF00FF] font-bold tracking-[0.4em] uppercase text-[10px] mb-4"
         >
           The Radar
@@ -123,7 +123,7 @@ export default function EventsPage() {
         <motion.h1 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-5xl md:text-7xl font-light tracking-tighter uppercase text-white leading-none"
+          className="text-5xl md:text-7xl font-light tracking-tighter uppercase text-white leading-none max-w-2xl"
         >
           Upcoming <br />
           <span className="italic font-black text-[#FF00FF]">Incidents.</span>
