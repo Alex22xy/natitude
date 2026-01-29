@@ -86,28 +86,30 @@ export default function EventsPage() {
   return (
     <div className="min-h-screen bg-black pt-24 px-6 pb-40 selection:bg-[#FF00FF]">
       
-      {/* 01. LIVE COUNTDOWN GRID */}
-      <motion.div 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-16 grid grid-cols-4 gap-2 max-w-sm mx-auto md:mx-0"
-      >
-        {[
-          { label: "Days", val: timeLeft.days },
-          { label: "Hrs", val: timeLeft.hours },
-          { label: "Min", val: timeLeft.minutes },
-          { label: "Sec", val: timeLeft.seconds },
-        ].map((unit) => (
-          <div key={unit.label} className="bg-zinc-900/40 border border-white/5 rounded-lg py-3 flex flex-col items-center justify-center backdrop-blur-sm">
-            <span className="text-xl font-black text-white tabular-nums tracking-tighter">
-              {String(unit.val).padStart(2, '0')}
-            </span>
-            <span className="text-[7px] uppercase font-black tracking-[0.2em] text-[#FF00FF] mt-1">
-              {unit.label}
-            </span>
-          </div>
-        ))}
-      </motion.div>
+      {/* 01. LIVE COUNTDOWN GRID - NOW CENTERED */}
+      <div className="w-full flex justify-center mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="grid grid-cols-4 gap-2 w-full max-w-[340px]"
+        >
+          {[
+            { label: "Days", val: timeLeft.days },
+            { label: "Hrs", val: timeLeft.hours },
+            { label: "Min", val: timeLeft.minutes },
+            { label: "Sec", val: timeLeft.seconds },
+          ].map((unit) => (
+            <div key={unit.label} className="bg-zinc-900/40 border border-white/5 rounded-lg py-3 flex flex-col items-center justify-center backdrop-blur-sm">
+              <span className="text-xl font-black text-white tabular-nums tracking-tighter">
+                {String(unit.val).padStart(2, '0')}
+              </span>
+              <span className="text-[7px] uppercase font-black tracking-[0.2em] text-[#FF00FF] mt-1">
+                {unit.label}
+              </span>
+            </div>
+          ))}
+        </motion.div>
+      </div>
 
       {/* 02. HEADER: THE RADAR */}
       <header className="mb-20">
