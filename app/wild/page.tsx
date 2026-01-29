@@ -28,7 +28,7 @@ export default function WildPage() {
             playsInline
             className="w-full h-full object-cover opacity-60"
           >
-            <source src="/assets/jungle.mp4" type="video/mp4" />
+            <source src="/assets/oldjungle.mp4" type="video/mp4" />
           </video>
         </motion.div>
 
