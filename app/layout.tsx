@@ -18,15 +18,8 @@ export default function RootLayout({
   return (
     <html lang="en" className="bg-black">
       <body className={`${inter.className} text-white antialiased`}>
-        
-        {/* Header removed for a cinematic, full-screen experience.
-            The 'pb-24' on <main> ensures content doesn't get hidden 
-            behind the BottomNav on longer pages.
-        */}
-        <main className="relative pb-24">
-          {children}
-        </main>
-
+        <div className="grain-overlay" /> {/* The grain layer */}
+        <main className="relative pb-24">{children}</main>
         <BottomNav />
       </body>
     </html>
