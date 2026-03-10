@@ -19,30 +19,27 @@ export async function POST(req: Request) {
       appliedAt: new Date(),
     });
 
-    // 2. SEND NOTIFICATION TO YOU (Admin)
+    // 2. SEND THE WELCOME EMAIL (The Transmission)
     await resend.emails.send({
-      from: 'Natitude <onboarding@resend.dev>',
-      to: 'your-email@example.com', // Your email
-      subject: 'NEW TRIBE MEMBER ⚡️',
-      html: `<p><strong>${body.fullName}</strong> just joined the jungle.</p>`
-    });
-
-    // 3. SEND WELCOME TO THE USER (Success Response)
-    // NOTE: On the free tier, this only works if the user's email is verified in Resend.
-    // Once you add a custom domain, this will work for EVERYONE.
-    await resend.emails.send({
-      from: 'Natitude <onboarding@resend.dev>',
+      from: 'NATITUDE <onboarding@resend.dev>', // Update this once your domain is verified
       to: body.email, 
-      subject: 'WELCOME TO THE TRIBE 🌿',
+      subject: 'TRANSMISSION RECEIVED // NATITUDE',
       html: `
-        <div style="font-family: 'Courier New', Courier, monospace; background-color: #000; color: #fff; padding: 40px; text-align: center;">
-          <h1 style="color: #FF00FF; letter-spacing: 5px;">NATITUDE</h1>
-          <p style="font-size: 18px;">Greetings, ${body.fullName}.</p>
-          <p>Your transmission has been received and encrypted into the jungle archives.</p>
-          <p>We are currently reviewing the latest batch of seekers. Watch your frequency for further instructions.</p>
-          <br />
-          <div style="border-top: 1px solid #333; padding-top: 20px;">
-            <p style="font-size: 12px; color: #666;">STAY WILD. STAY CONNECTED.</p>
+        <div style="background-color: #000; color: #fff; padding: 50px 20px; font-family: 'Courier New', Courier, monospace; text-align: center; border: 1px solid #333;">
+          <h1 style="color: #fff; letter-spacing: 10px; margin-bottom: 40px; font-size: 24px;">NATITUDE</h1>
+          
+          <div style="max-width: 500px; margin: 0 auto; text-align: left; line-height: 1.6; font-size: 14px;">
+            <p>Greetings, ${body.fullName}.</p>
+            
+            <p>Your transmission has been received and safely encrypted within the Jungle Archives.</p>
+            
+            <p>The tribe is now reviewing the latest wave of seekers. While the signal clears, stay tuned to your frequency — further instructions will be transmitted soon.</p>
+            
+            <p>Until then...</p>
+            
+            <p>Stay wild.<br>Stay connected.</p>
+            
+            <p style="margin-top: 40px; color: #666;">— NATITUDE</p>
           </div>
         </div>
       `
