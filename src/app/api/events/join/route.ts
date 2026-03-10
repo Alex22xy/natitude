@@ -1,25 +1,23 @@
 import { NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
 
-export async function POST(request: Request) {
+export async function POST(req: Request) {
   try {
     const client = await clientPromise;
-    const db = client.db("natitude_db");
-    const body = await request.json();
+    // We explicitly tell it to use "natitude"
+    const db = client.db("natitude"); 
+    const body = await req.json();
 
-    // Basic validation
-    if (!body.email || !body.fullName) {
-      return NextResponse.json({ error: "Missing data" }, { status: 400 });
-    }
-
+    // Now it will create "members" inside "natitude"
     const result = await db.collection("members").insertOne({
       ...body,
-      status: "pending", // You can approve them later
       appliedAt: new Date()
     });
 
     return NextResponse.json({ success: true, id: result.insertedId });
-  } catch (e) {
-    return NextResponse.json({ error: "Database connection failed" }, { status: 500 });
+  } catch (error: any) {
+    // This will help us see exactly what went wrong in the Vercel logs
+    console.error("Database error:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
