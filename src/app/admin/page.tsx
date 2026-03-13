@@ -15,13 +15,18 @@ export default function AdminDashboard() {
 
   // 1. Fetch members if authenticated
   const fetchMembers = async () => {
-    const res = await fetch('/api/admin/members');
-    if (res.ok) {
-      const data = await res.ok ? await res.json() : [];
-      setMembers(data);
-      setIsAuthenticated(true);
+    try {
+      const res = await fetch('/api/admin/members');
+      if (res.ok) {
+        const data = await res.json();
+        setMembers(data);
+        setIsAuthenticated(true);
+      }
+    } catch (err) {
+      console.error("Fetch error:", err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -42,6 +47,20 @@ export default function AdminDashboard() {
       fetchMembers();
     } else {
       setError('ACCESS DENIED: INVALID FREQUENCY');
+    }
+  };
+
+  // 3. Handle Member Approval
+  const approveMember = async (id: string) => {
+    const res = await fetch('/api/admin/members/approve', {
+      method: 'POST',
+      body: JSON.stringify({ id }),
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    if (res.ok) {
+      // Refresh the list to show the updated 'approved' status
+      fetchMembers();
     }
   };
 
@@ -104,18 +123,29 @@ export default function AdminDashboard() {
                   <td className="py-4 px-2 font-bold">{member.fullName}</td>
                   <td className="py-4 px-2 text-zinc-400">{member.email}</td>
                   <td className="py-4 px-2 text-[#ff00ff]">
-                    <a href={`https://instagram.com/${member.instagram?.replace('@', '')}`} target="_blank">
+                    <a href={`https://instagram.com/${member.instagram?.replace('@', '')}`} target="_blank" rel="noreferrer">
                       {member.instagram}
                     </a>
                   </td>
                   <td className="py-4 px-2 uppercase text-[10px]">
-                    <span className="border border-white px-2 py-1">{member.status}</span>
+                    {member.status === 'pending' ? (
+                      <button 
+                        onClick={() => approveMember(member._id)}
+                        className="border border-[#ff00ff] text-[#ff00ff] px-2 py-1 hover:bg-[#ff00ff] hover:text-black transition-colors"
+                      >
+                        APPROVE
+                      </button>
+                    ) : (
+                      <span className="border border-green-500 text-green-500 px-2 py-1">
+                        APPROVED
+                      </span>
+                    )}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          {members.length === 0 && (
+          {members.length === 0 && !loading && (
             <div className="py-20 text-center opacity-30 italic">No transmissions found in the archive.</div>
           )}
         </div>
