@@ -37,23 +37,47 @@ export async function POST(req: Request) {
       from: 'NATITUDE <onboarding@resend.dev>',
       to: member.email,
       subject: 'ACCESS GRANTED // THE INNER CIRCLE',
-      html: `
-        <div style="background-color: #000; color: #fff; padding: 60px 20px; font-family: 'Courier New', Courier, monospace; text-align: center;">
-          <div style="max-width: 600px; margin: 0 auto; border: 1px solid #ff00ff; padding: 40px; background-color: #000;">
-            <h1 style="color: #ff00ff; letter-spacing: 12px; margin-bottom: 30px; font-size: 24px;">WELCOME</h1>
-            <p style="margin-bottom: 25px;">Greetings, ${member.fullName}.</p>
-            <p style="margin-bottom: 25px; color: #ff00ff;">YOUR SIGNAL HAS BEEN CLEARED.</p>
-            <p style="line-height: 1.8; margin-bottom: 25px;">
-              You have been formally inducted into the NATITUDE archives. You are no longer a seeker; you are a member of the tribe.
-            </p>
-            <div style="border: 1px solid #333; padding: 20px; margin-bottom: 25px; text-align: left;">
-              <p style="font-size: 12px; color: #666; margin: 0;">SECRET_LOCATION_FREQUENCY:</p>
-              <p style="margin: 10px 0 0 0; color: #fff;">[DETAILS TO BE TRANSMITTED 24H BEFORE RITUAL]</p>
-            </div>
-            <p style="margin-top: 40px; font-size: 12px; opacity: 0.6;">STAY WILD. THE JUNGLE AWAITS.</p>
-          </div>
-        </div>
-      `
+      // Replace the html block in your approve/route.ts with this:
+html: `
+  <div style="background-color: #000; color: #fff; padding: 40px 20px; font-family: 'Helvetica', 'Arial', sans-serif; text-align: center;">
+    <div style="max-width: 500px; margin: 0 auto; border: 1px solid #333; padding: 40px; background-color: #000;">
+      
+      <img src="https://natitude.vercel.app/Email_logo.png" alt="NATITUDE" width="100" style="margin-bottom: 30px;" />
+      
+      <h1 style="color: #ff00ff; letter-spacing: 4px; font-size: 20px; text-transform: uppercase;">Access Granted</h1>
+      
+      <p style="font-size: 16px; line-height: 1.6; margin-bottom: 30px;">
+        Greetings, ${member.fullName}. Your application to the tribe has been approved.
+      </p>
+
+      <div style="background-color: #111; border: 1px solid #222; padding: 25px; text-align: left; margin-bottom: 30px;">
+        <h2 style="color: #ff00ff; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin-top: 0;">Next Steps:</h2>
+        
+        <p style="font-size: 14px; margin-bottom: 10px;">
+          <strong>1. Save the Date:</strong> Mark your calendar for our next ritual.
+        </p>
+        
+        <p style="font-size: 14px; margin-bottom: 10px;">
+          <strong>2. The Signal:</strong> To maintain exclusivity, the exact coordinates will be sent to this email address <strong>24 hours before</strong> the event starts.
+        </p>
+
+        <p style="font-size: 14px; margin: 0;">
+          <strong>3. Arrival:</strong> Prepare for an immersive experience. No late entry once the ritual begins.
+        </p>
+      </div>
+
+      <p style="font-size: 12px; color: #666; line-height: 1.6;">
+        If you have any questions before the transmission, reach out to us on Instagram.
+      </p>
+
+      <div style="margin-top: 40px; border-top: 1px solid #222; padding-top: 20px;">
+        <p style="letter-spacing: 2px; font-size: 10px; color: #ff00ff; text-transform: uppercase; margin: 0;">
+          Stay Wild.
+        </p>
+      </div>
+    </div>
+  </div>
+`
     });
 
     return NextResponse.json({ success: true });
