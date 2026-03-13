@@ -38,6 +38,7 @@ export async function POST(req: Request) {
       to: member.email,
       subject: 'ACCESS GRANTED // THE INNER CIRCLE',
       // Replace the html block in your approve/route.ts with this:
+// Look for the await resend.emails.send section and replace the html part:
 html: `
   <div style="background-color: #000; color: #fff; padding: 40px 20px; font-family: 'Helvetica', 'Arial', sans-serif; text-align: center;">
     <div style="max-width: 500px; margin: 0 auto; border: 1px solid #333; padding: 40px; background-color: #000;">
@@ -67,7 +68,7 @@ html: `
       </div>
 
       <p style="font-size: 12px; color: #666; line-height: 1.6;">
-        If you have any questions before the transmission, reach out to us on Instagram.
+        If you have any questions before the event, reach out to us on Instagram.
       </p>
 
       <div style="margin-top: 40px; border-top: 1px solid #222; padding-top: 20px;">
