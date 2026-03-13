@@ -59,7 +59,21 @@ export default function AdminDashboard() {
     });
 
     if (res.ok) {
-      // Refresh the list to show the updated 'approved' status
+      fetchMembers();
+    }
+  };
+
+  // 4. Handle Member Deletion
+  const deleteMember = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this transmission?")) return;
+
+    const res = await fetch('/api/admin/members/delete', {
+      method: 'DELETE',
+      body: JSON.stringify({ id }),
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    if (res.ok) {
       fetchMembers();
     }
   };
@@ -112,6 +126,7 @@ export default function AdminDashboard() {
                 <th className="py-4 px-2">Email</th>
                 <th className="py-4 px-2">Instagram</th>
                 <th className="py-4 px-2">Status</th>
+                <th className="py-4 px-2 text-right">Action</th>
               </tr>
             </thead>
             <tbody className="text-sm">
@@ -140,6 +155,14 @@ export default function AdminDashboard() {
                         APPROVED
                       </span>
                     )}
+                  </td>
+                  <td className="py-4 px-2 text-right">
+                    <button 
+                      onClick={() => deleteMember(member._id)}
+                      className="text-zinc-600 hover:text-red-500 transition-colors text-[10px] uppercase font-bold"
+                    >
+                      [Delete]
+                    </button>
                   </td>
                 </tr>
               ))}
